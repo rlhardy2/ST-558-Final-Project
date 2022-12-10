@@ -36,7 +36,13 @@ dashboardPage(skin = "blue",
         menuItem("About", tabName = "about", icon = icon("archive")),
         menuItem("Data", tabName = "data", icon = icon("folder-open")),
         menuItem("Data Exploration", tabName = "exploration", icon = icon("calculator")),
-        menuItem("Modeling", tabName = "modeling", icon = icon("line-chart"))
+            menuSubItem("Numerical Summaries", tabName = "summaries"),
+            menuSubItem("Contingency Tables", tabName = "tables"),
+            menuSubItem("Graphical Summaries", tabName = "graphs"),
+        menuItem("Modeling", tabName = "modeling", icon = icon("line-chart")),
+            menuSubItem("Modeling Information", tabName = "info"),
+            menuSubItem("Model Fitting", tabName = "fitting"),
+            menuSubItem("Prediction", tabName = "prediction")
     )),
     
     #Create the body of the app
@@ -51,7 +57,8 @@ dashboardPage(skin = "blue",
                     br(),
                     h4("More about the app..."),
                     br(),
-                    h4("Put image here somehow.")),
+                    h4("Put image here somehow.")
+                    ),
             
             #Second tab content - Data
             tabItem(tabName = "data",
@@ -69,14 +76,20 @@ dashboardPage(skin = "blue",
                                    title = strong("Subsetting columns"),
                                    background = "light-blue"))
                     ),
-                    DT::dataTableOutput("table")),
+                    DT::dataTableOutput("table")
+                    ),
             
             #Third tab content - Data Exploration
             tabItem(tabName = "exploration",
-                    h2(strong("Wine Quality App - Data Exploration"),
-                    br()),
+                    h2(strong("Wine Quality App - Data Exploration")),
+                    br()
+                    ),
+            
+            #First sub tab content - Numerical Summaries
+            tabItem(tabName = "summaries",
+                    h3(strong("Wine Quality App - Numerical Summaries")),
                     fluidRow(
-                      column(width = 6,
+                      column(width = 12,
                              box(width = 12,
                                  title = strong("Summarizing variables (mean and standard deviation)"),
                                  background = "light-blue",
@@ -86,7 +99,26 @@ dashboardPage(skin = "blue",
                                                          "pH", "sulphates", "alcohol", "free_sulfur_dioxide",
                                                          "total_sulfur_dioxide"), 
                                              selected = "fixed_acidity")))),
-                    DT::dataTableOutput("summary"))
+                    DT::dataTableOutput("summary")
+                    ),
+            
+            #Second sub tab content - Contingency Tables
+            tabItem(tabName = "tables",
+                    h3(strong("Wine Quality App - Contingency Tables"))
+                    #Code goes here
+                    ),
+            
+            #Third sub tab content - Graphical Summaries
+            tabItem(tabName = "graphs",
+                    h3(strong("Wine Quality App - Graphical Summaries"))
+                    #Code goes here
+                    ),
+            
+            #Fourth tab content - Modeling
+            tabItem(tabName = "modeling",
+                    h2(strong("WIne Quality App - Modeling")),
+                    br()
+                    )
         )
     )
 )
