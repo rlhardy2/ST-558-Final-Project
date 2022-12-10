@@ -3,26 +3,59 @@
 #12/12/2022
 
 library(shiny)
+library(shinydashboard)
+library(tidyverse)
+library(ggplot2)
+library(readr)
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
+red <- read_csv2("winequality-red.csv")
+white <- read_csv2("winequality-white.csv")
 
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-            plotOutput("distPlot")
+dashboardPage(skin = "blue",
+    
+    #Add a title
+    dashboardHeader(title = "Wine Quality"),
+    
+    #Create sidebar tabs with icons
+    dashboardSidebar(sidebarMenu(
+        menuItem("About", tabName = "about", icon = icon("archive")),
+        menuItem("Data", tabName = "data", icon = icon("folder-open")),
+        menuItem("Data Exploration", tabName = "exploration", icon = icon("calculator")),
+        menuItem("Modeling", tabName = "modeling", icon = icon("line-chart"))
+    )),
+    
+    #Create the body of the app
+    dashboardBody(
+        tabItems(
+            
+            #First tab content
+            tabItem(tabName = "about",
+                    h2("Wine Quality App - Information"),
+                    br(),
+                    h4("About the app..."),
+                    br(),
+                    h4("More about the app..."),
+                    br(),
+                    h4("Put image here somehow.")),
+            
+            tabItem(tabName = "data",
+                    h2("Wine Quality App - Data"))
+            
         )
     )
-))
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
