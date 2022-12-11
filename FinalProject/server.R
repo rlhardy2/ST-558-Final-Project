@@ -173,20 +173,70 @@ shinyServer(function(input, output, session) {
     })
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    #Splitting the data into testing and training sets based on user-selected proportion and variables
+    data_split <-reactive({
+      set.seed(100)
+      predictors <- input$predictors
+      subset <- wine[ , predictors]
+      subset$quality <- wine$quality
+      subset$quality_level <- wine$quality_level
       
+      train_index <- createDataPartition(subset$quality, p = (input$proportion), list = FALSE)
+      
+      train <- subset[train_index, ]
+      test <- subset[-train_index, ]
+      
+      list(train = train, test = test)
+    })
+    
+    
+    #Multiple linear regression model - training
+    MLR_train <- reactive({
+      MLR <- train(quality ~., data = data_split()$train,
+                   method = "lm",
+                   preProcess = c("center", "scale"),
+                   trControl = trainControl(method = "cv", number = input$cv))
+      MLR
+    })
+    
+    
+    #Output for the MLR training model
+    output$MLR_train <- renderPrint({
+      MLR_train()
+    })
+    
+    
+    #Regression tree model - training
+    RT_train <- reactive({
+      RT <- train(quality ~ ., data = data_split()$train,
+                  method = "rpart",
+                  preProcess = c("center", "scale"),
+                  trControl = trainControl(method = "cv", number = input$cv))
+      RT
+    })
+    
+    
+    #Output for the regression tree model
+    output$RT_train <- renderPrint({
+      RT_train()
+    })
+    
+    
+    #Random forest model - training
+    RF_train <- reactive({
+      RF <- train(quality ~ ., data = data_split()$train,
+                  method = "rf",
+                  preProcess = c("center", "scale"),
+                  trControl = trainControl(method = "cv", number = input$cv))
+      RF
+    })
+    
+    
+    #Output for the random forest model
+    output$RF_train <- renderPrint({
+      RF_train()
+    })
+    
+    
 })
 

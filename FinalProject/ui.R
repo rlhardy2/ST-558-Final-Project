@@ -235,7 +235,30 @@ dashboardPage(skin = "blue",
             tabItem(tabName = "fitting",
                     fluidPage(
                         h3(strong("Wine Quality App - Model Fitting")),
-                        br()
+                        br(),
+                        sidebarLayout(
+                            sidebarPanel(
+                                h4("Specify parameters for model fitting"),
+                                h5("Note: the selected proportion of training data may not be less than 0.5 or greater
+                                   than 0.9"),
+                                numericInput("proportion", "Select proportion of data to be used for training",
+                                             value = 0.7, min = 0.5, max = 0.9, step = 0.05),
+                                numericInput("cv", "Select number of folds to use for cross-validation",
+                                             value = 5, min = 2, max = 15, step = 1),
+                                selectInput("predictors", "Select predictor variables", choices = c("fixed_acidity", 
+                                        "volatile_acidity", "citric_acid", 
+                                        "residual_sugar", "chlorides","pH", "sulphates", "density", "alcohol", 
+                                         "free_sulfur_dioxide"), 
+                                          selected = c("residual_sugar", "alcohol", "pH"), 
+                                          multiple = TRUE),
+                                submitButton("Generate Model")
+                            ),
+                            mainPanel(
+                                verbatimTextOutput("MLR_train"),
+                                verbatimTextOutput("RT_train"),
+                                verbatimTextOutput("RF_train")
+                            )
+                        )
                     )
             ),
             
