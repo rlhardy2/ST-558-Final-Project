@@ -82,8 +82,19 @@ shinyServer(function(input, output, session) {
     })
   
     
+    #Create summary statistics
+    summary_stats <- reactive({
+      var <- input$stats
+      sum <- as.data.frame(wine[[var]])
+      colnames(sum) <- var
+      summary(sum)
+    })
     
     
+    #Renders the summary statistics above
+    output$stats <- renderPrint({
+      summary_stats()
+    })
     
     
     

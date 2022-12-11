@@ -121,15 +121,25 @@ dashboardPage(skin = "blue",
                         br(),
                         sidebarLayout(
                             sidebarPanel(
+                                h4("Mean and standard deviation of chosen variable grouped by type and quality level"),
                                 selectInput("summary", label = "Choose which variable to summarize",
                                             choices = c("fixed_acidity", "volatile_acidity", "citric_acid",
                                                         "residual_sugar", "chlorides", "pH", "sulphates", 
                                                         "free_sulfur_dioxide", "total_sulfur_dioxide"), 
                                             selected = "pH"),
-                                submitButton("Generate Summary"),
+                                submitButton("Generate Grouped Summary"),
+                                br(),
+                                h4("Summary statistics for chosen variable"),
+                                selectInput("stats", label = "Choose which variable to summarize",
+                                            choices = c("fixed_acidity", "volatile_acidity", "citric_acid",
+                                                        "residual_sugar", "chlorides", "pH", "sulphates", 
+                                                        "free_sulfur_dioxide", "total_sulfur_dioxide"), 
+                                            selected = "pH"),
+                                submitButton("Generate Summary Statistics")
                             ),
                             mainPanel(
-                                 DT::dataTableOutput("summary")  
+                                 DT::dataTableOutput("summary"),
+                                 verbatimTextOutput("stats")
                             )
                         ) 
                     )
