@@ -8,10 +8,14 @@ library(tidyverse)
 library(ggplot2)
 library(readr)
 
+###########################################################################################################
+
+#Reading in the data and combining the red and white data sets into a single data set called "wine"
 red <- read_csv2("winequality-red.csv") %>% mutate(type = "red") %>% select(type, everything())
 white <- read_csv2("winequality-white.csv") %>% mutate(type = "white") %>% select(type, everything())
 wine <- rbind(red, white)
 
+#Renaming some variables so they are easier to deal with
 wine <- wine %>% rename(fixed_acidity = `fixed acidity`,
                         volatile_acidity = `volatile acidity`,
                         citric_acid = `citric acid`,
@@ -19,6 +23,7 @@ wine <- wine %>% rename(fixed_acidity = `fixed acidity`,
                         free_sulfur_dioxide = `free sulfur dioxide`,
                         total_sulfur_dioxide = `total sulfur dioxide`)
 
+#Not all of the variables were numeric, so I am fixing that here
 wine$volatile_acidity <- as.numeric(wine$volatile_acidity)
 wine$citric_acid <- as.numeric(wine$citric_acid)
 wine$residual_sugar <- as.numeric(wine$residual_sugar)
@@ -26,9 +31,21 @@ wine$chlorides <- as.numeric(wine$chlorides)
 wine$density <- as.numeric(wine$density)
 wine$sulphates <- as.numeric(wine$sulphates)
 
+#Creating a new categorical variable called quality_level
+wine <- wine %>% mutate(quality_level = if_else((quality == 3 | quality == 4), "low", 
+                                            if_else((quality == 5 | quality == 6), "medium",
+                                                if_else((quality == 7 | quality == 8), "high",
+                                                    if_else((quality == 9), "very high", " ")))))
+
+#Converting the new categorical variable quality_level into a factor and ordering the levels
+wine$quality_level <- factor(wine$quality_level, levels = c("low", "medium", "high", "very high"))
+
+##########################################################################################################
+
+#Creating the dashboard page with blue skin
 dashboardPage(skin = "blue",
     
-    #Add a title
+    #Adding a title for the app
     dashboardHeader(title = "Wine Quality App"),
     
     #Create sidebar tabs with icons
@@ -47,78 +64,126 @@ dashboardPage(skin = "blue",
     
     #Create the body of the app
     dashboardBody(
+        
         tabItems(
             
             #First tab content - About
             tabItem(tabName = "about",
-                    h2(strong("Wine Quality App - Information")),
-                    br(),
-                    h4("About the app..."),
-                    br(),
-                    h4("More about the app..."),
-                    br(),
-                    h4("Put image here somehow.")
-                    ),
+                    fluidPage(
+                        h2(strong("Wine Quality App - Information")),
+                        br(),
+                        p("Write stuff here!"),
+                        imageOutput("wine_picture")
+                    )
+            ),
+            
             
             #Second tab content - Data
             tabItem(tabName = "data",
-                    h2(strong("Wine Quality App - Data")),
-                    br(),
-                    fluidRow(
-                        column(width = 6,
-                               box(width = 12,
-                                   title = strong("Subsetting rows"),
-                                   background = "light-blue",
-                                   selectInput(inputId = "wine_type", label = "Wine Type",
-                                               choices = c("red", "white"), selected = "red"))),
-                        column(width = 6,
-                               box(width = 12,
-                                   title = strong("Subsetting columns"),
-                                   background = "light-blue"))
-                    ),
-                    DT::dataTableOutput("table")
-                    ),
+                    fluidPage(
+                        h2(strong("Wine Quality App - View the Data")),
+                        sidebarLayout(
+                            sidebarPanel(
+                                selectInput("cols", "Select columns", choices = c("type", "quality", "quality_level", 
+                                                                    "fixed_acidity", "volatile_acidity", "citric_acid",
+                                                                    "residual_sugar", "chlorides", "pH", "sulphates", "density", 
+                                                                    "alcohol", "free_sulfur_dioxide", "total_sulfur_dioxide"), 
+                                                                  selected = c("type", "quality", "alcohol"), multiple = TRUE),
+                                submitButton("Generate Table"),
+                                br(),
+                                p("Download a .csv file of the sub-setted data"),
+                                downloadButton("download", "Download")
+                            ),
+                            mainPanel(
+                                dataTableOutput("data_table")
+                            )
+                        )
+                    )
+            ),
+                    
             
             #Third tab content - Data Exploration
             tabItem(tabName = "exploration",
-                    h2(strong("Wine Quality App - Data Exploration")),
-                    br()
-                    ),
+                    fluidPage(
+                        h2(strong("Wine Quality App - Data Exploration")),
+                        br(),
+                        p("Write about what the tabs include.")
+                    )
+            ),
+            
             
             #First sub tab content - Numerical Summaries
             tabItem(tabName = "summaries",
-                    h3(strong("Wine Quality App - Numerical Summaries")),
-                    fluidRow(
-                      column(width = 12,
-                             box(width = 12,
-                                 title = strong("Summarizing variables (mean and standard deviation)"),
-                                 background = "light-blue",
-                                 selectInput(inputId = "summary", label = "Variables to Summarize",
-                                             choices = c("fixed_acidity", "volatile_acidity", "citric_acid",
-                                                         "residual_sugar", "chlorides", "density",
-                                                         "pH", "sulphates", "alcohol", "free_sulfur_dioxide",
-                                                         "total_sulfur_dioxide"), 
-                                             selected = "fixed_acidity")))),
-                    DT::dataTableOutput("summary")
-                    ),
+                    fluidPage(
+                        h3(strong("Wine Quality App - Numerical Summaries")),
+                        sidebarLayout(
+                            sidebarPanel(
+                                selectInput("summary", label = "Choose which variable to summarize",
+                                            choices = c("fixed_acidity", "volatile_acidity", "citric_acid",
+                                                        "residual_sugar", "chlorides", "pH", "sulphates", 
+                                                        "free_sulfur_dioxide", "total_sulfur_dioxide"), 
+                                            selected = "fixed_acidity")
+                            ),
+                            mainPanel(
+                                DT::dataTableOutput("summary")   
+                            )
+                        ) 
+                    )
+            ),
+            
             
             #Second sub tab content - Contingency Tables
             tabItem(tabName = "tables",
-                    h3(strong("Wine Quality App - Contingency Tables"))
-                    #Code goes here
-                    ),
+                    fluidPage(
+                        h3(strong("Wine Quality App - Contingency Tables"))
+                    )
+            ),
+            
             
             #Third sub tab content - Graphical Summaries
             tabItem(tabName = "graphs",
-                    h3(strong("Wine Quality App - Graphical Summaries"))
-                    #Code goes here
-                    ),
+                    fluidPage(
+                        h3(strong("Wine Quality App - Graphical Summaries"))
+                    )
+            ),
+            
             
             #Fourth tab content - Modeling
             tabItem(tabName = "modeling",
-                    h2(strong("WIne Quality App - Modeling")),
-                    br()
+                    fluidPage(
+                        h2(strong("WIne Quality App - Modeling")),
+                        br(),
+                        p("Write about what the tabs include.")
                     )
+            ),
+            
+            
+            #First sub tab content - Modeling Information
+            tabItem(tabName = "info",
+                    fluidPage(
+                        h3(strong("Wine Quality App - Modeling Information")),
+                        br(),
+                        p("Write about the different models here.")
+                    )
+            ),
+            
+            
+            #Second sub tab content - Model Fitting
+            tabItem(tabName = "fitting",
+                    fluidPage(
+                        h3(strong("Wine Quality App - Model Fitting")),
+                        br()
+                    )
+            ),
+            
+            
+            #Third sub tab content - Prediction
+            tabItem(tabName = "prediction",
+                    fluidPage(
+                        h3(strong("Wine Quality App - Prediction")),
+                        br()
+                    )
+            )
         )
     )
 )
