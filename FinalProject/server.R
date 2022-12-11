@@ -23,7 +23,20 @@ shinyServer(function(input, output, session) {
     #Subset the data based on user selection of columns
     data_subset <- reactive({
       cols <- input$cols
-      data_subset <- wine[ ,cols]
+      rows <- input$wine_type
+      
+      if(rows == "red and white"){
+        data_subset <- wine[ ,cols]
+        data_subset
+      }
+      else if(rows == "red"){
+        data_subset <- wine[wine$type == "red", cols]
+        data_subset
+      }
+      else if(rows == "white"){
+        data_subset <- wine[wine$type == "white", cols]
+        data_subset
+      }
     })
     
     
@@ -96,6 +109,8 @@ shinyServer(function(input, output, session) {
       summary_stats()
     })
     
+    
+    #Create graphical summaries
     
     
     
