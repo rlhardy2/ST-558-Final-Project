@@ -119,29 +119,29 @@ shinyServer(function(input, output, session) {
       if(graph_type == "Histogram"){
         
         if(wine_type == "red and white"){
-          ggplot(wine, aes_string(x=var)) + geom_histogram(fill = "blue")
+          ggplot(wine, aes_string(x = var)) + geom_histogram(fill = "blue")
         }
         else if(wine_type == "red"){
           temp_red <- wine[wine$type == "red", ]
-          ggplot(temp_red, aes_string(x=var)) + geom_histogram(fill = "blue")
+          ggplot(temp_red, aes_string(x = var)) + geom_histogram(fill = "blue")
         }
         else if(wine_type == "white"){
           temp_white <- wine[wine$type == "white", ]
-          ggplot(temp_white, aes_string(x=var)) + geom_histogram(fill = "blue")
+          ggplot(temp_white, aes_string(x = var)) + geom_histogram(fill = "blue")
         }
       }
       else if(graph_type == "Box Plot"){
         
         if(wine_type == "red and white"){
-          ggplot(wine, aes_string(x=var)) + geom_boxplot()
+          ggplot(wine, aes_string(x = var)) + geom_boxplot()
         }
         else if(wine_type == "red"){
           temp_red <- wine[wine$type == "red", ]
-          ggplot(temp_red, aes_string(x=var)) + geom_boxplot()
+          ggplot(temp_red, aes_string(x = var)) + geom_boxplot()
         }
         else if(wine_type == "white"){
           temp_white <- wine[wine$type == "white", ]
-          ggplot(temp_white, aes_string(x=var)) + geom_boxplot()
+          ggplot(temp_white, aes_string(x = var)) + geom_boxplot()
         }
       }
     })
@@ -150,6 +150,26 @@ shinyServer(function(input, output, session) {
     #Renders the graph created above
     output$graph_summary <- renderPlot({
       graph_summary()
+    })
+    
+    
+    #Create graphical summaries - bar plot
+    bar_plot <- reactive({
+      var <- input$cate_var
+      group <- input$bar_group
+      
+      if(group == "No"){
+        ggplot(wine, aes_string(x = var)) + geom_bar()
+      }
+      else if(group == "Yes"){
+        ggplot(wine, aes_string(x = var)) + geom_bar(aes(fill = type), position = "dodge")
+      }
+    })
+    
+    
+    #Render the bar plot created above
+    output$bar_plot <- renderPlot({
+      bar_plot()
     })
     
     

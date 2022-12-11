@@ -191,10 +191,20 @@ dashboardPage(skin = "blue",
                                 selectInput("graph_wine", "Select wine type", 
                                             choices = c("red", "white", "red and white"), 
                                             selected = "red and white"),
-                                submitButton("Generate Graph")
+                                submitButton("Generate Graph"),
+                                br(),
+                                h4("Bar plot for chosen categorical variable"),
+                                selectInput("cate_var", "Select variable",
+                                            choices = c("quality", "quality_level"),
+                                            selected = "quality_level"),
+                                radioButtons("bar_group", "Group by wine type?",
+                                             choices = c("Yes", "No"),
+                                             selected = "No"),
+                                submitButton("Generate Bar Plot")
                             ),
                             mainPanel(
-                                plotOutput("graph_summary")
+                                plotOutput("graph_summary"),
+                                plotOutput("bar_plot")
                             )
                         )
                     )
