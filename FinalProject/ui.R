@@ -85,6 +85,7 @@ dashboardPage(skin = "blue",
                         br(),
                         sidebarLayout(
                             sidebarPanel(
+                                h4("Subset the data by columns and wine type"),
                                 selectInput("cols", "Select columns", choices = c("type", "quality", "quality_level", 
                                             "fixed_acidity", "volatile_acidity", "citric_acid",
                                             "residual_sugar", "chlorides", "pH", "sulphates", "density", "alcohol", 
@@ -93,7 +94,7 @@ dashboardPage(skin = "blue",
                                             multiple = TRUE),
                                 selectInput("wine_type", "Select wine type", choices = c("red", "white", "red and white"),
                                             selected = "red and white"),
-                                submitButton("Generate Table"),
+                                submitButton("Generate Data Set"),
                                 br(),
                                 p("Download a .csv file of the sub-setted data"),
                                 downloadButton("download", "Download")
@@ -123,7 +124,8 @@ dashboardPage(skin = "blue",
                         br(),
                         sidebarLayout(
                             sidebarPanel(
-                                h4("Mean and standard deviation of chosen variable grouped by type and quality level"),
+                                h4("Mean and standard deviation of chosen variable grouped by wine type and 
+                                   quality level"),
                                 selectInput("summary", label = "Choose which variable to summarize",
                                             choices = c("fixed_acidity", "volatile_acidity", "citric_acid",
                                                         "residual_sugar", "chlorides", "pH", "sulphates", 
@@ -155,10 +157,11 @@ dashboardPage(skin = "blue",
                         br(),
                         sidebarLayout(
                             sidebarPanel(
-                                selectInput("contingency", "Select which contingency table to create", 
+                                h4("Contingency table for chosen variable(s)"),
+                                selectInput("contingency", "Select which contingency table to generate", 
                                             choices = list("type", "quality_level", "type vs quality_level"),
                                             selected = "type"),
-                                submitButton("Generate Table"),
+                                submitButton("Generate Table")
                             ),
                             mainPanel(
                                 verbatimTextOutput("contingency")
@@ -172,7 +175,28 @@ dashboardPage(skin = "blue",
             tabItem(tabName = "graphs",
                     fluidPage(
                         h3(strong("Wine Quality App - Graphical Summaries")),
-                        br()
+                        br(),
+                        sidebarLayout(
+                            sidebarPanel(
+                                h4("Graph for chosen quantitative variable"),
+                                radioButtons("graph_choice", "Select which graph to generate",
+                                             choices = c("Histogram", "Box Plot"), 
+                                             selected = "Histogram"),
+                                selectInput("quan_var", "Select variable", 
+                                            choices = c("fixed_acidity", 
+                                            "volatile_acidity",
+                                            "citric_acid", "residual_sugar", "chlorides", "pH", "sulphates", "density",
+                                            "free_sulfur_dioxide", "total_sulfur_dioxide"),
+                                            selected = "pH"),
+                                selectInput("graph_wine", "Select wine type", 
+                                            choices = c("red", "white", "red and white"), 
+                                            selected = "red and white"),
+                                submitButton("Generate Graph")
+                            ),
+                            mainPanel(
+                                plotOutput("graph_summary")
+                            )
+                        )
                     )
             ),
             

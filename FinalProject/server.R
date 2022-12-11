@@ -110,8 +110,47 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Create graphical summaries
+    #Create graphical summaries - histogram or box plot
+    graph_summary <- reactive({
+      graph_type <- input$graph_choice
+      var <- input$quan_var
+      wine_type <- input$graph_wine
+      
+      if(graph_type == "Histogram"){
+        
+        if(wine_type == "red and white"){
+          ggplot(wine, aes_string(x=var)) + geom_histogram(fill = "blue")
+        }
+        else if(wine_type == "red"){
+          temp_red <- wine[wine$type == "red", ]
+          ggplot(temp_red, aes_string(x=var)) + geom_histogram(fill = "blue")
+        }
+        else if(wine_type == "white"){
+          temp_white <- wine[wine$type == "white", ]
+          ggplot(temp_white, aes_string(x=var)) + geom_histogram(fill = "blue")
+        }
+      }
+      else if(graph_type == "Box Plot"){
+        
+        if(wine_type == "red and white"){
+          ggplot(wine, aes_string(x=var)) + geom_boxplot()
+        }
+        else if(wine_type == "red"){
+          temp_red <- wine[wine$type == "red", ]
+          ggplot(temp_red, aes_string(x=var)) + geom_boxplot()
+        }
+        else if(wine_type == "white"){
+          temp_white <- wine[wine$type == "white", ]
+          ggplot(temp_white, aes_string(x=var)) + geom_boxplot()
+        }
+      }
+    })
     
+    
+    #Renders the graph created above
+    output$graph_summary <- renderPlot({
+      graph_summary()
+    })
     
     
     
