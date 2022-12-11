@@ -15,23 +15,23 @@ shinyServer(function(input, output, session) {
     #Code for rendering the image
     output$wine_picture <- renderImage({
       list(src = "winepicture.jpg",
-           width = 550,
-           height = 400)
+           width = 450,
+           height = 300)
       }, deleteFile = FALSE)
     
-    #Subset the data based on user selection
+    
+    #Subset the data based on user selection of columns
     data_subset <- reactive({
       cols <- input$cols
       data_subset <- wine[ ,cols]
     })
+    
     
     #Rendering the above sub-setted data into a table
     output$data_table <- DT::renderDataTable({
       data_subset()
     })
     
-    #Data frame for "Data" tab
-    output$table <- DT::renderDataTable(wine)
     
     #This if for downloading the data
     output$download <- downloadHandler(
@@ -41,14 +41,67 @@ shinyServer(function(input, output, session) {
       }
     )
     
-    #Mean summary for "Data Exploration" tab
-    output$summary <- DT::renderDataTable({
+    
+    #Create numerical summaries for the user selected variable
+    summaries <- reactive({
       var <- input$summary
-      tab <- wine %>% 
-        select("type", "quality_level", var) %>%
+      tab <- wine %>% select("type", "quality_level", var) %>%
         group_by(type, quality_level) %>%
-        summarize(mean = round(mean(get(var)), 2), sd = round(sd(get(var)), 2))
-      tab
+        summarize(mean = round(mean(get(var)), 2))
     })
     
+    
+    #Numerical summary generation code
+    output$summary <- DT::renderDataTable({
+      summaries()
+    })
+    
+    
+    #Create some contingency tables
+    contingency <- reactive({
+      table <- input$contingency
+      
+      if(table == "type"){
+        tab <- data.frame(table(wine$type))
+        tab
+      }
+      else if(table == "quality_level"){
+        tab <- data.frame(table(wine$quality_level))
+        tab
+      }
+      else if(table == "type vs quality_level"){
+        tab <- data.frame(table(wine$type, wine$quality_level))
+        tab
+      }
+    })
+    
+    
+    #Renders the contingency table from above
+    output$contingency <- renderPrint({
+      contingency()
+    })
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
 })
+

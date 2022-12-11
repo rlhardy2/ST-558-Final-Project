@@ -82,20 +82,22 @@ dashboardPage(skin = "blue",
             tabItem(tabName = "data",
                     fluidPage(
                         h2(strong("Wine Quality App - View the Data")),
+                        br(),
                         sidebarLayout(
                             sidebarPanel(
                                 selectInput("cols", "Select columns", choices = c("type", "quality", "quality_level", 
                                                                     "fixed_acidity", "volatile_acidity", "citric_acid",
-                                                                    "residual_sugar", "chlorides", "pH", "sulphates", "density", 
-                                                                    "alcohol", "free_sulfur_dioxide", "total_sulfur_dioxide"), 
-                                                                  selected = c("type", "quality", "alcohol"), multiple = TRUE),
+                                                                    "residual_sugar", "chlorides", "pH", "sulphates",                                                                         "density", "alcohol", 
+                                                                    "free_sulfur_dioxide", "total_sulfur_dioxide"), 
+                                                                      selected = c("type", "quality", "quality_level"), 
+                                                                      multiple = TRUE),
                                 submitButton("Generate Table"),
                                 br(),
                                 p("Download a .csv file of the sub-setted data"),
                                 downloadButton("download", "Download")
                             ),
                             mainPanel(
-                                dataTableOutput("data_table")
+                                DT::dataTableOutput("data_table")
                             )
                         )
                     )
@@ -116,16 +118,18 @@ dashboardPage(skin = "blue",
             tabItem(tabName = "summaries",
                     fluidPage(
                         h3(strong("Wine Quality App - Numerical Summaries")),
+                        br(),
                         sidebarLayout(
                             sidebarPanel(
                                 selectInput("summary", label = "Choose which variable to summarize",
                                             choices = c("fixed_acidity", "volatile_acidity", "citric_acid",
                                                         "residual_sugar", "chlorides", "pH", "sulphates", 
                                                         "free_sulfur_dioxide", "total_sulfur_dioxide"), 
-                                            selected = "fixed_acidity")
+                                            selected = "pH"),
+                                submitButton("Generate Summary"),
                             ),
                             mainPanel(
-                                DT::dataTableOutput("summary")   
+                                 DT::dataTableOutput("summary")  
                             )
                         ) 
                     )
@@ -135,7 +139,19 @@ dashboardPage(skin = "blue",
             #Second sub tab content - Contingency Tables
             tabItem(tabName = "tables",
                     fluidPage(
-                        h3(strong("Wine Quality App - Contingency Tables"))
+                        h3(strong("Wine Quality App - Contingency Tables")),
+                        br(),
+                        sidebarLayout(
+                            sidebarPanel(
+                                selectInput("contingency", "Select which contingency table to create", 
+                                            choices = list("type", "quality_level", "type vs quality_level"),
+                                            selected = "type"),
+                                submitButton("Generate Table"),
+                            ),
+                            mainPanel(
+                                verbatimTextOutput("contingency")
+                            )
+                        )
                     )
             ),
             
@@ -143,7 +159,8 @@ dashboardPage(skin = "blue",
             #Third sub tab content - Graphical Summaries
             tabItem(tabName = "graphs",
                     fluidPage(
-                        h3(strong("Wine Quality App - Graphical Summaries"))
+                        h3(strong("Wine Quality App - Graphical Summaries")),
+                        br()
                     )
             ),
             
