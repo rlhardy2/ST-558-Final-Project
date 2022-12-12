@@ -23,19 +23,74 @@ shinyServer(function(input, output, session) {
     #Subset the data based on user selection of columns
     data_subset <- reactive({
       cols <- input$cols
-      rows <- input$wine_type
+      type <- input$wine_type
+      level <- input$level
       
-      if(rows == "all"){
-        data_subset <- wine[ ,cols]
-        data_subset
+      if(type == "all"){
+        if(level == "all"){
+          data <- wine[ ,cols]
+          data
+        }
+        else if(level == "low"){
+          data <- wine[wine$quality_level == "low", cols]
+          data
+        }
+        else if(level == "medium"){
+          data <- wine[wine$quality_level == "medium", cols]
+          data
+        }
+        else if(level == "high"){
+          data <- wine[wine$quality_level == "high", cols]
+          data
+        }
+        else if(level == "very high"){
+          data <- wine[wine$quality_level == "very high", cols]
+          data
+        }
       }
-      else if(rows == "red"){
-        data_subset <- wine[wine$type == "red", cols]
-        data_subset
+      else if(type == "red"){
+        if(level == "all"){
+          data <- wine[wine$type == "red" ,cols]
+          data
+        }
+        else if(level == "low"){
+          data <- wine[(wine$quality_level == "low" & wine$type == "red"), cols]
+          data
+        }
+        else if(level == "medium"){
+          data <- wine[(wine$quality_level == "medium" & wine$type == "red"), cols]
+          data
+        }
+        else if(level == "high"){
+          data <- wine[(wine$quality_level == "high" & wine$type == "red"), cols]
+          data
+        }
+        else if(level == "very high"){
+          data <- wine[(wine$quality_level == "very high" & wine$type == "red"), cols]
+          data
+        }
       }
-      else if(rows == "white"){
-        data_subset <- wine[wine$type == "white", cols]
-        data_subset
+      else if(type == "white"){
+        if(level == "all"){
+          data <- wine[wine$type == "white" ,cols]
+          data
+        }
+        else if(level == "low"){
+          data <- wine[(wine$quality_level == "low" & wine$type == "white"), cols]
+          data
+        }
+        else if(level == "medium"){
+          data <- wine[(wine$quality_level == "medium" & wine$type == "white"), cols]
+          data
+        }
+        else if(level == "high"){
+          data <- wine[(wine$quality_level == "high" & wine$type == "white"), cols]
+          data
+        }
+        else if(level == "very high"){
+          data <- wine[(wine$quality_level == "very high" & wine$type == "white"), cols]
+          data
+        }
       }
     })
     
