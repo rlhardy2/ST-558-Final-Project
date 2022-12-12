@@ -73,7 +73,6 @@ dashboardPage(skin = "blue",
                     fluidPage(
                         h2(strong("Wine Quality App - Information")),
                         br(),
-                        
                         h4("The purpose of this app is to explore data on wine quality for both red and white Portuguese", 
                            em("Vinho Verde"), "wines. The data sets are from the", strong("UCI Machine Learning Repository"), 
                            "and the link to the webpage can be found below."),
@@ -95,16 +94,14 @@ dashboardPage(skin = "blue",
                            The Performance section shows the performance statistics of the model that the user selects (using
                            the test data). The Prediction tab allows the user to simulate a model where the predictor values
                            are specified by the user and a prediction is calculated."),
-                        
                         br(),
                         h4(helpText(a("UCI Machine Learning Repository - Wine Quality Data", 
                                       href="https://archive.ics.uci.edu/ml/datasets/wine+quality", target="_blank"))),
                         br(),
-                        
                         fluidRow(
                            column(6,
-                                   
-                           h4(strong("type"), "- type of wine, either red or white (categorical)", br(),
+                           h4("Variable descriptions:", br(), br(),
+                           strong("type"), "- type of wine, either red or white (categorical)", br(),
                            strong("quality"), "- quality of the wine, ranging from 3 to 9 (categorical)", br(),
                            strong("quality_level"), "- quality level of the wine, raning from low to very high (categorical)", br(),
                            strong("fixed_acidity"), "- fixed acidity of the wine (numerical)", br(),
@@ -119,7 +116,6 @@ dashboardPage(skin = "blue",
                            strong("sulphates"), "- amount of sulphates in the wine", br(),
                            strong("alcohol"), "-alcohol content of the wine")
                            ),
-                           
                            column(6,
                              imageOutput("wine_picture")
                            )
@@ -165,7 +161,21 @@ dashboardPage(skin = "blue",
                     fluidPage(
                         h2(strong("Wine Quality App - Data Exploration")),
                         br(),
-                        p("Write about what the tabs include.")
+                        
+                        h4("This Data Exploration section has three subsections: (1) Numerical Summaries, (2) Contingency Tables,
+                           and (3) Graphical Summaries. What each subsection includes is listed below."),
+                        br(),
+                        h4(strong("Numerical Summaries"), "- this section includes two numerical summaries. The top one is a data
+                           table where the user selects which variable to summarize (mean and standard deviation) and whether
+                           or not to group the summary. If the user chooses to group the summary, they can choose to group by wine
+                           type, quality level, or wine type and quality level."),
+                        br(),
+                        h4(strong("Contingency Tables"), "- this section includes five contingency tables. The user selects from
+                           a drop-down list which table to generate. The options are: a one-way table of wine type, a one-way
+                           table of quality, a one-way table of quality level, a two-way table of wine type vs quality, and a
+                           two-way table of wine type vs quality level."),
+                        br(),
+                        h4(strong("Graphical Summaries"), "-")
                     )
             ),
             
