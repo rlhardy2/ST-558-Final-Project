@@ -10,6 +10,46 @@ library(readr)
 library(caret)
 library(mathjaxr)
 
+###########################################################################################################
+
+#Reading in the data and combining the red and white data sets into a single data set called "wine"
+red <- read_csv2("winequality-red.csv") %>% mutate(type = "red") %>% select(type, everything())
+white <- read_csv2("winequality-white.csv") %>% mutate(type = "white") %>% select(type, everything())
+wine <- rbind(red, white)
+
+#Renaming some variables so they are easier to deal with
+wine <- wine %>% rename(fixed_acidity = `fixed acidity`,
+                        volatile_acidity = `volatile acidity`,
+                        citric_acid = `citric acid`,
+                        residual_sugar = `residual sugar`,
+                        free_sulfur_dioxide = `free sulfur dioxide`,
+                        total_sulfur_dioxide = `total sulfur dioxide`)
+
+#Not all of the variables were numeric, so I am fixing that here
+wine$volatile_acidity <- as.numeric(wine$volatile_acidity)
+wine$citric_acid <- as.numeric(wine$citric_acid)
+wine$residual_sugar <- as.numeric(wine$residual_sugar)
+wine$chlorides <- as.numeric(wine$chlorides)
+wine$density <- as.numeric(wine$density)
+wine$sulphates <- as.numeric(wine$sulphates)
+
+#Creating a new categorical variable called quality_level
+wine <- wine %>% mutate(quality_level = if_else((quality == 3 | quality == 4), "low", 
+                                                if_else((quality == 5 | quality == 6), "medium",
+                                                        if_else((quality == 7 | quality == 8), "high",
+                                                                if_else((quality == 9), "very high", " ")))))
+
+#Converting the new categorical variable quality_level into a factor and ordering the levels
+wine$quality_level <- factor(wine$quality_level, levels = c("low", "medium", "high", "very high"))
+
+#The alcohol variables is acting really strange and not being read in correctly
+#I'm going to remove the crazy large outliers with the filtering code below
+#Also removing observations with missing values
+
+wine <- wine %>% filter(alcohol < 1000) %>% na.omit()
+
+##########################################################################################################
+
 #Define server
 shinyServer(function(input, output, session) {
     
@@ -366,10 +406,49 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Prediction tab
-    #pred_tab <- reactice({
+    #Creating new data frame with user inputted predictor values
+    new_data <- reactive({
+      data <- data.frame(
+        type = input$pred_wine,
+        residual_sugar = input$pred_sugar,
+        pH = input$pred_pH,
+        alcohol = input$pred_alcohol,
+        fixed_acidity = input$pred_fixed_acid,
+        volatile_acidity = input$pred_volatile_acid,
+        citric_acid = input$pred_citric_acid,
+        chlorides = input$pred_chlorides,
+        sulphates = input$pred_sulphates,
+        density = input$pred_density,
+        free_sulfur_dioxide = input$pred_free_sulfur,
+        total_sulfur_dioxide = input$pred_total_sulfur)
       
-    #})
+      data
+    })
+    
+    
+    #Calculating prediction
+    model_predict <- reactive ({
+      model <- input$model_predict
+      
+      if(model == "Multiple Linear Regression"){
+        pred <- predict(MLR_train(), newdata = new_data()$data)
+        pred
+      }
+      else if(model == "Regression Tree"){
+        pred <- predict(RT_train(), newdata = new_data()$data)
+        pred
+      }
+      else if(model == "Random Forest"){
+        pred <- predict(RF_train(), newdata = new_data()$data)
+        pred
+      }
+    })
+    
+    
+    #Printing the prediction result
+    final_predict <- renderPrint({
+      model_predict()
+    })
     
 })
 

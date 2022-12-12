@@ -44,8 +44,9 @@ wine$quality_level <- factor(wine$quality_level, levels = c("low", "medium", "hi
 
 #The alcohol variables is acting really strange and not being read in correctly
 #I'm going to remove the crazy large outliers with the filtering code below
+#Also removing observations with missing values
 
-wine <- wine %>% filter(alcohol < 1000)
+wine <- wine %>% filter(alcohol < 1000) %>% na.omit()
 
 ##########################################################################################################
 
@@ -291,13 +292,18 @@ dashboardPage(skin = "blue",
                            (3) Performance, and (4) Prediction. What each subsection includes is listed below."),
                         br(),
                         h4(strong("Model Information"), "- this subsection includes information as well as pros and cons of each
-                           model used in this app."),
+                           model used in this app. The models used are: multiple linear regression, regression (decision) tree,
+                           and random forest."),
                         br(),
-                        h4(strong("Model Fitting"), "- this subsection includes "),
+                        h4(strong("Model Fitting"), "- this subsection allows the user to choose which model to fit, choose 
+                           which predictor variables to use, and specify parameters such as the proportion of training data 
+                           and number of folds for cross-validation. The chosen model is then generated. "),
                         br(),
-                        h4(strong("Performance"), "- this subsection includes "),
+                        h4(strong("Performance"), "- this subsection shows the performance statistics of the model that the 
+                           user selects (using the test data)."),
                         br(),
-                        h4(strong("Prediction"), "- this subsection includes ")
+                        h4(strong("Prediction"), "- this subsection allows the user to simulate a model where the predictor 
+                           values are specified by the user and a prediction is calculated.")
                     )
             ),
             
@@ -447,7 +453,6 @@ dashboardPage(skin = "blue",
                                 br(),
                                 
                                 #User inputs for predictor variables
-                                #Alcohol is excluded because of the weird values I couldn't fix
                                 h4(strong("Choose values for predictor variables")),
                                 selectInput("pred_wine", "Choose wine type",
                                             choices = c("red", "white"),
@@ -482,12 +487,16 @@ dashboardPage(skin = "blue",
                                 numericInput("pred_free_sulfur", "Input value for free sulfur dioxide",
                                              value = round(mean(wine$free_sulfur_dioxide), 2),
                                              min = 0, step = 0.05), 
+                                numericInput("pred_total_sulfur", "Input value for total sulfur dioxide",
+                                             value = round(mean(wine$total_sulfur_dioxide), 2),
+                                             min = 0, step = 0.05),
                                 
                                 submitButton("Generate Prediction")
                             ),
                             mainPanel(
                                 h3(strong("Results for Prediction Simulation")),
-                                h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, be patient!")
+                                h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, be patient!"),
+                                verbatimTextOutput("final_predict")
                             )
                         )
                     )
