@@ -114,12 +114,14 @@ dashboardPage(skin = "blue",
                            strong("density"), "- density of the wine", br(),
                            strong("pH"), "- pH of the wine", br(),
                            strong("sulphates"), "- amount of sulphates in the wine", br(),
-                           strong("alcohol"), "-alcohol content of the wine")
+                           strong("alcohol"), "- alcohol content of the wine")
                            ),
                            column(6,
                              imageOutput("wine_picture")
                            )
-                        )
+                        ),
+                        h4("P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis. Modeling wine preferences by data mining from 
+                           physicochemical properties. In Decision Support Systems, Elsevier, 47(4):547-553, 2009.")
                     )
             ),
             
@@ -165,17 +167,21 @@ dashboardPage(skin = "blue",
                         h4("This Data Exploration section has three subsections: (1) Numerical Summaries, (2) Contingency Tables,
                            and (3) Graphical Summaries. What each subsection includes is listed below."),
                         br(),
-                        h4(strong("Numerical Summaries"), "- this section includes two numerical summaries. The top one is a data
+                        h4(strong("Numerical Summaries"), "- this subsection includes two numerical summaries. The top one is a data
                            table where the user selects which variable to summarize (mean and standard deviation) and whether
                            or not to group the summary. If the user chooses to group the summary, they can choose to group by wine
                            type, quality level, or wine type and quality level."),
                         br(),
-                        h4(strong("Contingency Tables"), "- this section includes five contingency tables. The user selects from
+                        h4(strong("Contingency Tables"), "- this subsection includes five contingency tables. The user selects from
                            a drop-down list which table to generate. The options are: a one-way table of wine type, a one-way
                            table of quality, a one-way table of quality level, a two-way table of wine type vs quality, and a
                            two-way table of wine type vs quality level."),
                         br(),
-                        h4(strong("Graphical Summaries"), "-")
+                        h4(strong("Graphical Summaries"), "- this subsection includes two graphs. For the first graph, the user selects
+                           which quantitative variable to graph, as well as which graph to create, either a histogram or a box
+                           plot. The user also has the option to subset the data by wine type for this graph. The second graph is a bar
+                           plot of either quality or quality level, whichever the user chooses. The user also has the option to group
+                           the bar plot by wine type.")
                     )
             ),
             
@@ -274,7 +280,17 @@ dashboardPage(skin = "blue",
                     fluidPage(
                         h2(strong("WIne Quality App - Modeling")),
                         br(),
-                        p("Write about what the tabs include.")
+                        h4("This Modeling section has four subsections: (1) Model Information, (2) Model Fitting,
+                           (3) Performance, and (4) Prediction. What each subsection includes is listed below."),
+                        br(),
+                        h4(strong("Model Information"), "- this subsection includes information as well as pros and cons of each
+                           model used in this app."),
+                        br(),
+                        h4(strong("Model Fitting"), "- this subsection includes "),
+                        br(),
+                        h4(strong("Performance"), "- this subsection includes "),
+                        br(),
+                        h4(strong("Prediction"), "- this subsection includes ")
                     )
             ),
             
@@ -284,7 +300,63 @@ dashboardPage(skin = "blue",
                     fluidPage(
                         h2(strong("Wine Quality App - Modeling Information")),
                         br(),
-                        p("Write about the different models here.")
+                        h4("This Model Information subsection includes information as well as pros and cons of each model used in
+                           this app."),
+                        br(),
+                        h4(strong("Multiple Linear Regression"), "- a statistical technique that is used to predict the outcome
+                           of a variable based on the value of two or more variables. The variable to be predicted is called the
+                           dependent variable (or response variable), while the variables used to predict the value are known as
+                           independent variables (or explanatory variables).", br(), br(),
+                           
+                           "Some advantages of multiple linear regression are: (1) the ability to determine the relative influence
+                           of one or more predictor variables to the target value, (2) the ability to identify outliers, and (3) it
+                           works well on any size data set.", br(), br(),
+                           
+                           "Some disadvantages of multiple linear regression are: (1) it is hard to choose the right polynomial
+                           degree for good bias / variance trade-off, (2) it can be easy to mistakenly conclude that a correlation
+                           is a causation, (3) it can be severly affected by outliers if proper steps aren't taken, and (4) it
+                           assumes homoskedacity (constant variance around the mean)."),
+                        br(),
+                        h4(strong("Regression (Decision) Tree"), "- a statistical technique that helps 
+                           determine the most important (based
+                           on explanatory power) variables in a data set. A regression tree is a type of decision tree. Decision
+                           trees are among the most popular machine learning algorithms given their intelligibility and simplicity.
+                           A tree is built by splitting the source set, constituting the root node of the tree, into subsets — which 
+                           constitute the successor children. The splitting is based on a set of splitting rules based on 
+                           classification features. If the response variable is categorical, it is considered a classification
+                           tree. If the response variable is continuous, it is considered a regression tree.", br(), br(),
+                           
+                           "Some advantages of regression (decision) trees are: (1) it is generally easy to interpret the
+                           results, (2) it works well on both linear and non-linear problems, (3) the data preparation during 
+                           pre-processing requires less effort and does not require normalization of data, and (4) decision trees
+                           are not as heavily affected by outliers as other predictive models.", br(), br(),
+                           
+                           "Some disadvantages of regression (decision) trees are: (1) they can provide poor results on smaller
+                           data sets, (2) overfitting can easily occur (this can be resolved by pruning the tree and setting
+                           constraints on the model parameters), (3) a small change in the data can cause a big difference in 
+                           the tree structure, and (4) it is expensive compared to other models because of the time it takes
+                           to run the model and the complexity of the model."),
+                        br(),
+                        h4(strong("Random Forest"), "- a statistical technique in which bagged trees are created using
+                           bootstrap aggregation. For bagged trees, the sample is treated as the population and re-sampling is done 
+                           with replacement. The process of creating a bagged tree is as follows: (1) create the bootstrap
+                           sample, (2) train the tree on this sample (no pruning necessary), (3) repeat B = 1000 times (no set mark),
+                           (4) the final prediction is average of these predictions (for regression trees) OR use majority 
+                           vote as final classification prediction (for classification trees).", br(), br(),
+                           
+                           "Random forests are essentially bagged trees, except not all the predictors are used for each model. 
+                           A random subset of predictors is used for each tree model (bootstrap sample). The purpose of doing 
+                           this is to prevent one or two strong predictors from dominating all tree models and creating unwanted 
+                           correlation between models.", br(), br(),
+                           
+                           "Some advantages of random forests are: (1) they can be used for both regression and classification
+                           tasks, (2) no scaling or transformation of the variables is necessary, (3) the trees created are not
+                           correlated, (4) they are not influenced by outliers, (5) they can handle linear and non-linear
+                           relationships well, and (6) they generally are highly accurate and balance the bias / variance
+                           trade-off well.", br(), br(),
+                           
+                           "Some disadvantages of random forests are: (1) they are not easily interpreted, (2) they can be
+                           computationally expensive, and (3) the user has very little control over what the model does.")
                     )
             ),
             
