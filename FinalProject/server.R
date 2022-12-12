@@ -76,14 +76,27 @@ shinyServer(function(input, output, session) {
       
       if(table == "type"){
         tab <- data.frame(table(wine$type))
+        colnames(tab) <- c("type", "freq")
         tab
       }
       else if(table == "quality_level"){
         tab <- data.frame(table(wine$quality_level))
+        colnames(tab) <- c("quality_level", "freq")
+        tab
+      }
+      else if(table == "quality"){
+        tab <- data.frame(table(wine$quality))
+        colnames(tab) <- c("quality", "freq")
         tab
       }
       else if(table == "type vs quality_level"){
         tab <- data.frame(table(wine$type, wine$quality_level))
+        colnames(tab) <- c("type", "quality_level", "freq")
+        tab
+      }
+      else if(table == "type vs quality"){
+        tab <- data.frame(table(wine$type, wine$quality))
+        colnames(tab) <- c("type", "quality", "freq")
         tab
       }
     })
@@ -175,7 +188,6 @@ shinyServer(function(input, output, session) {
     
     #Splitting the data into testing and training sets based on user-selected proportion and variables
     data_split <-reactive({
-      set.seed(100)
       predictors <- input$predictors
       subset <- wine[ , predictors]
       subset$quality <- wine$quality
@@ -200,12 +212,6 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Output for the MLR training model
-    output$MLR_train <- renderPrint({
-      MLR_train()
-    })
-    
-    
     #Regression tree model - training
     RT_train <- reactive({
       RT <- train(quality ~ ., data = data_split()$train,
@@ -213,12 +219,6 @@ shinyServer(function(input, output, session) {
                   preProcess = c("center", "scale"),
                   trControl = trainControl(method = "cv", number = input$cv))
       RT
-    })
-    
-    
-    #Output for the regression tree model
-    output$RT_train <- renderPrint({
-      RT_train()
     })
     
     
@@ -232,11 +232,69 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Output for the random forest model
-    output$RF_train <- renderPrint({
-      RF_train()
+    #Outputting chosen model on training data
+    output$training_model <- renderPrint({
+      
+      if(input$train == "Multiple Linear Regression"){
+        MLR_train()
+      }
+      else if(input$train == "Regression Tree"){
+        RT_train()
+      }
+      else if(input$train == "Random Forest"){
+        RF_train()
+      }
+      else if(input$train == "All Models"){
+        MLR_train()
+        RT_train()
+        RF_train()
+      }
     })
     
+    
+    #MLR prediction / performance
+    MLR_test <- reactive({
+      pred <- predict(MLR_train(), newdata = data_split()$test)
+      perf <- postResample(pred, obs = data_split()$test$quality)
+      
+      list(prediction = pred, performance = perf)
+    })
+    
+    
+    #RT prediction / performance
+    RT_test <- reactive({
+      pred <- predict(RT_train(), newdata = data_split()$test)
+      perf <- postResample(pred, obs = data_split()$test$quality)
+      
+      list(prediction = pred, performance = perf)
+    })
+    
+    
+    #RF prediction / performance
+    RF_test <- reactive({
+      pred <- predict(RF_train(), newdata = data_split()$test)
+      perf <- postResample(pred, obs = data_split()$test$quality)
+      
+      list(prediction = pred, performance = perf)
+    })
+    
+    
+    #Print the results from above
+    output$performance <- renderPrint({
+      
+      if(input$model == "Multiple Linear Regression"){
+        MLR_test()$prediction
+        MLR_test()$performance
+      }
+      else if(input$model == "Regression Tree"){
+        RT_test()$prediction
+        RT_test()$performance
+      }
+      else if(input$model == "Random Forest"){
+        RF_test()$prediction
+        RF_test()$performance
+      }
+    })
     
 })
 

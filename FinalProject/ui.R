@@ -59,6 +59,7 @@ dashboardPage(skin = "blue",
         menuItem("Modeling", tabName = "modeling", icon = icon("line-chart")),
             menuSubItem("Modeling Information", tabName = "info"),
             menuSubItem("Model Fitting", tabName = "fitting"),
+            menuSubItem("Performance", tabName = "performance"),
             menuSubItem("Prediction", tabName = "prediction")
     )),
     
@@ -159,7 +160,8 @@ dashboardPage(skin = "blue",
                             sidebarPanel(
                                 h4("Contingency table for chosen variable(s)"),
                                 selectInput("contingency", "Select which contingency table to generate", 
-                                            choices = list("type", "quality_level", "type vs quality_level"),
+                                            choices = list("type", "quality_level", "quality", "type vs quality_level",
+                                                           "type vs quality"),
                                             selected = "type"),
                                 submitButton("Generate Table")
                             ),
@@ -238,37 +240,60 @@ dashboardPage(skin = "blue",
                         br(),
                         sidebarLayout(
                             sidebarPanel(
-                                h4("Specify parameters for model fitting"),
+                                h4(strong("Specify the parameters for model fitting and choose which model to simulate")),
                                 h5("Note: the selected proportion of training data may not be less than 0.5 or greater
-                                   than 0.9"),
+                                   than 0.9!"),
                                 numericInput("proportion", "Select proportion of data to be used for training",
                                              value = 0.7, min = 0.5, max = 0.9, step = 0.05),
                                 numericInput("cv", "Select number of folds to use for cross-validation",
-                                             value = 5, min = 2, max = 15, step = 1),
+                                             value = 5, min = 2, max = 10, step = 1),
                                 selectInput("predictors", "Select predictor variables", choices = c("fixed_acidity", 
                                         "volatile_acidity", "citric_acid", 
                                         "residual_sugar", "chlorides","pH", "sulphates", "density", "alcohol", 
                                          "free_sulfur_dioxide"), 
                                           selected = c("residual_sugar", "alcohol", "pH"), 
                                           multiple = TRUE),
+                                radioButtons("train", "Choose which model to simulate",
+                                             choices = c("Multiple Linear Regression", "Regression Tree",
+                                                         "Random Forest", "All Models"),
+                                             selected = "Multiple Linear Regression"),
                                 submitButton("Generate Model")
                             ),
                             mainPanel(
                                 h3(strong("Results for Modeling on the Training Data Set")),
-                                h5("Note: this page takes a few minutes to load becuase of the Random Forest model, be patient!"),
-                                h4("Multiple Linear Regression:"),
-                                verbatimTextOutput("MLR_train"),
-                                h4("Regression Tree:"),
-                                verbatimTextOutput("RT_train"),
-                                h4("Random Forest:"),
-                                verbatimTextOutput("RF_train")
+                                h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, be patient!"),
+                                verbatimTextOutput("training_model")
                             )
                         )
                     )
             ),
             
             
-            #Third sub tab content - Prediction
+            #Third sub tab content - Performance
+            tabItem(tabName = "performance",
+                    fluidPage(
+                        h2(strong("Wine Quality App - Performance")),
+                        br(),
+                        sidebarLayout(
+                            sidebarPanel(
+                                h4(strong("Choose which model to simulate")),
+                                radioButtons("model", "Choose which model to simulate",
+                                            choices = c("Multiple Linear Regression", "Regression Tree",
+                                                        "Random Forest"),
+                                            selected = "Multiple Linear Regression"),
+                                submitButton("Generate Performance Statistics")
+                            ),
+                            mainPanel(
+                                 h3(strong("Results for Modeling and Prediction on the Test Data Set")),
+                                 h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, be patient!"),
+                                 verbatimTextOutput("performance")
+                            )
+                        )
+                    )
+            ),
+            
+            
+            #Fourth sub tab content - Prediction
             tabItem(tabName = "prediction",
                     fluidPage(
                         h2(strong("Wine Quality App - Prediction")),
@@ -278,8 +303,7 @@ dashboardPage(skin = "blue",
                                 
                             ),
                             mainPanel(
-                                h3(strong("Results for Modeling and Prediction on the Test Data Set")),
-                                h5("Note; this page takes a few minutes to load because of the Random Forest model, be patient!")
+                                
                             )
                         )
                     )
