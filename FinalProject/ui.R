@@ -74,17 +74,31 @@ dashboardPage(skin = "blue",
                         h2(strong("Wine Quality App - Information")),
                         br(),
                         
-                        h4("The purpose of this app is to explore data on wine quality for both red and white wines. The data set is 
-                        from the", strong("UCI Machine Learning Repository"), "and can be found at the bottom of the page."),
+                        h4("The purpose of this app is to explore data on wine quality for both red and white Portuguese", 
+                           em("Vinho Verde"), "wines. The data sets are from the", strong("UCI Machine Learning Repository"), 
+                           "and the link to the webpage can be found below."),
                         
                         h4("The data is in two different data sets, one for red wine and one for white wine. For this app, the two
                            data sets have been compiled into one with additional variables added. The complete data set has 14
-                           variables and 1,497 observations. The variables and their descriptions are below."),
-                        br(),
+                           variables and 6,497 observations. The variables and their descriptions are at the bottom of the page."),
                         
+                        h4("This app has three quantitative sections: (1) Data, (2) Data Exploration, and (3) Modeling.
+                           The Data section allows the user to subset the data set by rows and columns and download their
+                           subsetted version as a .csv file. The user can subset the rows by type, quality_level, or both, and
+                           can subset the columns by choosing which variables to include. The Data Exploration section
+                           computes summary statistics, contingency tables, and graphical summaries based on user input. These
+                           summaries can be modified by subsetting or grouping the data in some cases. The Modeling section has four
+                           subsections: (1) Modeling Information, (2) Model Fitting, (3) Performance, and (4) Prediction. The Model 
+                           Information tab includes information as well as pros and cons of each model used. The Model Fitting
+                           section allows the user to choose which model to fit, choose which predictor variables to use, and
+                           specify parameters such as the proportion of training data and number of folds for cross-validation.
+                           The Performance section shows the performance statistics of the model that the user selects (using
+                           the test data). The Prediction tab allows the user to simulate a model where the predictor values
+                           are specified by the user and a prediction is calculated."),
+                        
+                        br(),
                         h4(helpText(a("UCI Machine Learning Repository - Wine Quality Data", 
-                                      href="https://archive.ics.uci.edu/ml/datasets/wine+quality",
-                                      target="_blank"))),
+                                      href="https://archive.ics.uci.edu/ml/datasets/wine+quality", target="_blank"))),
                         br(),
                         
                         fluidRow(
@@ -135,7 +149,7 @@ dashboardPage(skin = "blue",
                                             selected = "all"),
                                 submitButton("Generate Data Set"),
                                 br(),
-                                p("Download a .csv file of the sub-setted data"),
+                                p("Download a .csv file of the subsetted data"),
                                 downloadButton("download", "Download")
                             ),
                             mainPanel(
