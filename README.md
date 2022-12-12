@@ -23,7 +23,7 @@ The required packages for this app are:
 
 The following code can be used to install the above packages:
 
-`install.packages("shiny", "shinydashboard", "tidyverse", "ggplot2", "readr", "caret", "mathjaxr")
+`install.packages("shiny", "shinydashboard", "tidyverse", "ggplot2", "readr", "caret", "mathjaxr")`
 
 ## Required Code
 
