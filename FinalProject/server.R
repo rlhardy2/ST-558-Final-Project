@@ -249,7 +249,7 @@ shinyServer(function(input, output, session) {
       group <- input$bar_group
       
       if(group == "No"){
-        ggplot(wine, aes_string(x = var)) + geom_bar()
+        ggplot(wine, aes_string(x = var)) + geom_bar() 
       }
       else if(group == "Yes"){
         ggplot(wine, aes_string(x = var)) + geom_bar(aes(fill = type), position = "dodge")

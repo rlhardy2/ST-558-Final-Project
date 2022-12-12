@@ -481,7 +481,7 @@ dashboardPage(skin = "blue",
                                              min = 0, step = 0.05),
                                 numericInput("pred_free_sulfur", "Input value for free sulfur dioxide",
                                              value = round(mean(wine$free_sulfur_dioxide), 2),
-                                             min = 0, step = 0.05),
+                                             min = 0, step = 0.05), 
                                 
                                 submitButton("Generate Prediction")
                             ),
