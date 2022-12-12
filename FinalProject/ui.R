@@ -381,9 +381,9 @@ dashboardPage(skin = "blue",
                                          "free_sulfur_dioxide"), 
                                           selected = c("residual_sugar", "alcohol", "pH"), 
                                           multiple = TRUE),
-                                radioButtons("train", "Choose which model to simulate",
+                                radioButtons("train", "Choose model for simulation",
                                              choices = c("Multiple Linear Regression", "Regression Tree",
-                                                         "Random Forest", "All Models"),
+                                                         "Random Forest"),
                                              selected = "Multiple Linear Regression"),
                                 submitButton("Generate Model")
                             ),
@@ -404,15 +404,15 @@ dashboardPage(skin = "blue",
                         br(),
                         sidebarLayout(
                             sidebarPanel(
-                                h4(strong("Choose which model to simulate")),
-                                radioButtons("model", "Choose which model to simulate",
+                                h4(strong("Choose model for performance simulation")),
+                                radioButtons("model", "Choose model for simulation",
                                             choices = c("Multiple Linear Regression", "Regression Tree",
                                                         "Random Forest"),
                                             selected = "Multiple Linear Regression"),
                                 submitButton("Generate Performance Statistics")
                             ),
                             mainPanel(
-                                 h3(strong("Results for Modeling and Prediction on the Test Data Set")),
+                                 h3(strong("Results for Modeling on the Testing Data Set")),
                                  h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, be patient!"),
                                  verbatimTextOutput("performance")
                             )
@@ -428,10 +428,16 @@ dashboardPage(skin = "blue",
                         br(),
                         sidebarLayout(
                             sidebarPanel(
-                                
+                                h4(strong("Choose model for prediction simulation")),
+                                radioButtons("model_predict", "Choose model for simulation",
+                                             choices = c("Multiple Linear Regression", "Regression Tree",
+                                                         "Random Forest"),
+                                             selected = "Multiple Linear Regression"),    
+                                submitButton("Generate Prediction")
                             ),
                             mainPanel(
-                                
+                                h3(strong("Results for Prediction Simulation")),
+                                h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, be patient!")
                             )
                         )
                     )

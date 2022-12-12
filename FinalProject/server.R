@@ -20,7 +20,7 @@ shinyServer(function(input, output, session) {
       }, deleteFile = FALSE)
     
     
-    #Subset the data based on user selection of columns
+    #Subset the data based on user selection of columns and rows (type and quality level)
     data_subset <- reactive({
       cols <- input$cols
       type <- input$wine_type
@@ -101,7 +101,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #This if for downloading the data
+    #Downloading the data as a .csv file
     output$download <- downloadHandler(
       filename = "wine.csv",
       content = function(file) {
@@ -110,7 +110,7 @@ shinyServer(function(input, output, session) {
     )
     
     
-    #Create numerical summaries for the user selected variable
+    #Create numerical summaries (mean and SD) for the user selected variable with grouping option
     summaries <- reactive({
       var <- input$summary
       group <- input$grouping
@@ -140,7 +140,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Numerical summary generation code
+    #Render numerical summary above
     output$summary <- DT::renderDataTable({
       summaries()
     })
@@ -155,7 +155,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Renders the summary statistics above
+    #Renders summary statistics above
     output$stats <- renderPrint({
       summary_stats()
     })
@@ -193,7 +193,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Renders the contingency table from above
+    #Render the contingency tables from above
     output$contingency <- renderPrint({
       contingency()
     })
@@ -256,13 +256,13 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Render the bar plot created above
+    #Renders the graph created above
     output$bar_plot <- renderPlot({
       bar_plot()
     })
     
     
-    #Splitting the data into testing and training sets based on user-selected proportion and variables
+    #Splitting the data into testing and training sets based on user-selected proportion value and predictor variables
     data_split <-reactive({
       predictors <- input$predictors
       subset <- wine[ , predictors]
@@ -320,15 +320,10 @@ shinyServer(function(input, output, session) {
       else if(input$train == "Random Forest"){
         RF_train()
       }
-      else if(input$train == "All Models"){
-        MLR_train()
-        RT_train()
-        RF_train()
-      }
     })
     
     
-    #MLR prediction / performance
+    #Multiple linear regression prediction / performance
     MLR_test <- reactive({
       pred <- predict(MLR_train(), newdata = data_split()$test)
       perf <- postResample(pred, obs = data_split()$test$quality)
@@ -337,7 +332,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #RT prediction / performance
+    #Regression tree prediction / performance
     RT_test <- reactive({
       pred <- predict(RT_train(), newdata = data_split()$test)
       perf <- postResample(pred, obs = data_split()$test$quality)
@@ -346,7 +341,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #RF prediction / performance
+    #Random forest prediction / performance
     RF_test <- reactive({
       pred <- predict(RF_train(), newdata = data_split()$test)
       perf <- postResample(pred, obs = data_split()$test$quality)
@@ -355,22 +350,32 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Print the results from above
+    #Print out the results from above
     output$performance <- renderPrint({
       
       if(input$model == "Multiple Linear Regression"){
-        MLR_test()$prediction
         MLR_test()$performance
       }
       else if(input$model == "Regression Tree"){
-        RT_test()$prediction
         RT_test()$performance
       }
       else if(input$model == "Random Forest"){
-        RF_test()$prediction
         RF_test()$performance
       }
     })
+    
+    
+    #Prediction tab
+    pred_tab <- reactice({
+      
+    })
+    
+    
+    #Rendering the output for the prediction tab
+    output$prediction_tab <- renderPrint({
+      
+    })
+    
     
 })
 
