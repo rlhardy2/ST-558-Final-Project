@@ -25,7 +25,7 @@ shinyServer(function(input, output, session) {
       cols <- input$cols
       rows <- input$wine_type
       
-      if(rows == "red and white"){
+      if(rows == "all"){
         data_subset <- wine[ ,cols]
         data_subset
       }
@@ -58,15 +58,51 @@ shinyServer(function(input, output, session) {
     #Create numerical summaries for the user selected variable
     summaries <- reactive({
       var <- input$summary
-      tab <- wine %>% select("type", "quality_level", var) %>%
-        group_by(type, quality_level) %>%
-        summarize(mean = round(mean(get(var)), 2))
+      group <- input$grouping
+      
+      if(group == "none"){
+        tab <- wine %>% select(var) %>% 
+          summarize(mean = round(mean(get(var)), 2), sd = round(sd(get(var)), 2))
+      }
+      else if(group == "type"){
+        tab <- wine %>% 
+          select("type", var) %>% 
+          group_by(type) %>%
+          summarize(mean = round(mean(get(var)), 2), sd = round(sd(get(var)), 2))
+      }
+      else if(group == "quality_level"){
+        tab <- wine %>% 
+          select("quality_level", var) %>% 
+          group_by(quality_level) %>%
+          summarize(mean = round(mean(get(var)), 2), sd = round(sd(get(var)), 2))
+      }
+      else if(group == "type and quality_level"){
+        tab <- wine %>% 
+          select("type", "quality_level", var) %>%
+          group_by(type, quality_level) %>%
+          summarize(mean = round(mean(get(var)), 2), sd = round(sd(get(var)), 2))
+      }
     })
     
     
     #Numerical summary generation code
     output$summary <- DT::renderDataTable({
       summaries()
+    })
+    
+    
+    #Create summary statistics
+    summary_stats <- reactive({
+      var <- input$summary
+      sum <- as.data.frame(wine[[var]])
+      colnames(sum) <- var
+      summary(sum)
+    })
+    
+    
+    #Renders the summary statistics above
+    output$stats <- renderPrint({
+      summary_stats()
     })
     
     
@@ -106,21 +142,6 @@ shinyServer(function(input, output, session) {
     output$contingency <- renderPrint({
       contingency()
     })
-  
-    
-    #Create summary statistics
-    summary_stats <- reactive({
-      var <- input$stats
-      sum <- as.data.frame(wine[[var]])
-      colnames(sum) <- var
-      summary(sum)
-    })
-    
-    
-    #Renders the summary statistics above
-    output$stats <- renderPrint({
-      summary_stats()
-    })
     
     
     #Create graphical summaries - histogram or box plot
@@ -131,7 +152,7 @@ shinyServer(function(input, output, session) {
       
       if(graph_type == "Histogram"){
         
-        if(wine_type == "red and white"){
+        if(wine_type == "all"){
           ggplot(wine, aes_string(x = var)) + geom_histogram(fill = "blue")
         }
         else if(wine_type == "red"){
@@ -145,7 +166,7 @@ shinyServer(function(input, output, session) {
       }
       else if(graph_type == "Box Plot"){
         
-        if(wine_type == "red and white"){
+        if(wine_type == "all"){
           ggplot(wine, aes_string(x = var)) + geom_boxplot()
         }
         else if(wine_type == "red"){
