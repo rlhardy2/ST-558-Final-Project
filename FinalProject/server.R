@@ -8,6 +8,7 @@ library(tidyverse)
 library(ggplot2)
 library(readr)
 library(caret)
+library(mathjaxr)
 
 #Define server
 shinyServer(function(input, output, session) {
@@ -208,29 +209,29 @@ shinyServer(function(input, output, session) {
       if(graph_type == "Histogram"){
         
         if(wine_type == "all"){
-          ggplot(wine, aes_string(x = var)) + geom_histogram(fill = "blue")
+          ggplot(wine, aes_string(x = var)) + geom_histogram(fill = "steelblue")
         }
         else if(wine_type == "red"){
           temp_red <- wine[wine$type == "red", ]
-          ggplot(temp_red, aes_string(x = var)) + geom_histogram(fill = "blue")
+          ggplot(temp_red, aes_string(x = var)) + geom_histogram(fill = "steelblue")
         }
         else if(wine_type == "white"){
           temp_white <- wine[wine$type == "white", ]
-          ggplot(temp_white, aes_string(x = var)) + geom_histogram(fill = "blue")
+          ggplot(temp_white, aes_string(x = var)) + geom_histogram(fill = "steelblue")
         }
       }
       else if(graph_type == "Box Plot"){
         
         if(wine_type == "all"){
-          ggplot(wine, aes_string(x = var)) + geom_boxplot()
+          ggplot(wine, aes_string(x = var)) + geom_boxplot(color = "steelblue")
         }
         else if(wine_type == "red"){
           temp_red <- wine[wine$type == "red", ]
-          ggplot(temp_red, aes_string(x = var)) + geom_boxplot()
+          ggplot(temp_red, aes_string(x = var)) + geom_boxplot(color = "steelblue")
         }
         else if(wine_type == "white"){
           temp_white <- wine[wine$type == "white", ]
-          ggplot(temp_white, aes_string(x = var)) + geom_boxplot()
+          ggplot(temp_white, aes_string(x = var)) + geom_boxplot(color = "steelblue")
         }
       }
     })
@@ -366,16 +367,9 @@ shinyServer(function(input, output, session) {
     
     
     #Prediction tab
-    pred_tab <- reactice({
+    #pred_tab <- reactice({
       
-    })
-    
-    
-    #Rendering the output for the prediction tab
-    output$prediction_tab <- renderPrint({
-      
-    })
-    
+    #})
     
 })
 

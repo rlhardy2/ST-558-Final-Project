@@ -7,6 +7,8 @@ library(shinydashboard)
 library(tidyverse)
 library(ggplot2)
 library(readr)
+library(caret)
+library(mathjaxr)
 
 ###########################################################################################################
 
@@ -39,6 +41,11 @@ wine <- wine %>% mutate(quality_level = if_else((quality == 3 | quality == 4), "
 
 #Converting the new categorical variable quality_level into a factor and ordering the levels
 wine$quality_level <- factor(wine$quality_level, levels = c("low", "medium", "high", "very high"))
+
+#The alcohol variables is acting really strange and not being read in correctly
+#I'm going to remove the crazy large outliers with the filtering code below
+
+wine <- wine %>% filter(alcohol < 1000)
 
 ##########################################################################################################
 
@@ -194,7 +201,7 @@ dashboardPage(skin = "blue",
                         sidebarLayout(
                             sidebarPanel(
                                 h4(strong("Top item is a table of mean and standard deviation of chosen variable with optional grouping 
-                                        and second item is summary statistics for the chosen variable")),
+                                        and second item is summary statistics for same chosen variable")),
                                 selectInput("summary", label = "Choose which variable to summarize",
                                             choices = c("fixed_acidity", "volatile_acidity", "citric_acid",
                                                         "residual_sugar", "chlorides", "pH", "sulphates", 
@@ -254,7 +261,7 @@ dashboardPage(skin = "blue",
                                             "free_sulfur_dioxide", "total_sulfur_dioxide"),
                                             selected = "pH"),
                                 selectInput("graph_wine", "Select wine type", 
-                                            choices = c("red", "white", "all"), 
+                                            choices = c("all", "red", "white"), 
                                             selected = "all"),
                                 br(),
                                 h4(strong("Bar plot for chosen categorical variable")),
@@ -378,7 +385,11 @@ dashboardPage(skin = "blue",
                                 selectInput("predictors", "Select predictor variables", choices = c("fixed_acidity", 
                                         "volatile_acidity", "citric_acid", 
                                         "residual_sugar", "chlorides","pH", "sulphates", "density", "alcohol", 
-                                         "free_sulfur_dioxide"), 
+                                         "free_sulfur_dioxide", "type"), #See note below
+                                        
+                                #Note: 'total_sulfur_dioxide' was left out because it has some missing values
+                                #I would try to fix it, but it's honestly too late for me to try to deal with that!
+                                
                                           selected = c("residual_sugar", "alcohol", "pH"), 
                                           multiple = TRUE),
                                 radioButtons("train", "Choose model for simulation",
@@ -432,7 +443,46 @@ dashboardPage(skin = "blue",
                                 radioButtons("model_predict", "Choose model for simulation",
                                              choices = c("Multiple Linear Regression", "Regression Tree",
                                                          "Random Forest"),
-                                             selected = "Multiple Linear Regression"),    
+                                             selected = "Multiple Linear Regression"),
+                                br(),
+                                
+                                #User inputs for predictor variables
+                                #Alcohol is excluded because of the weird values I couldn't fix
+                                h4(strong("Choose values for predictor variables")),
+                                selectInput("pred_wine", "Choose wine type",
+                                            choices = c("red", "white"),
+                                            selected = "red"),
+                                numericInput("pred_sugar", "Input value for residual sugar",
+                                             value = round(mean(wine$residual_sugar), 2),
+                                             min = 0, step = 0.05),
+                                numericInput("pred_pH", "Input value for pH",
+                                             value = round(mean(wine$pH), 2),
+                                             min = 0, step = 0.05),
+                                numericInput("pred_alcohol", "Input value for alcohol content",
+                                             value = round(mean(wine$alcohol), 2),
+                                             min = 0, step = 0.05),
+                                numericInput("pred_fixed_acid", "Input value for fixed acidity",
+                                             value = round(mean(wine$fixed_acidity), 2),
+                                             min = 0, step = 0.05),
+                                numericInput("pred_volatile_acid", "Input value for volatile acidity",
+                                             value = round(mean(wine$volatile_acidity), 2),
+                                             min = 0, step = 0.05),
+                                numericInput("pred_citric_acid", "Input value for citric acid",
+                                             value = round(mean(wine$citric_acid), 2),
+                                             min = 0, step = 0.05),
+                                numericInput("pred_chlorides", "Input value for chlorides",
+                                             value = round(mean(wine$chlorides), 2),
+                                             min = 0, step = 0.05),
+                                numericInput("pred_sulphates", "Input value for sulphates",
+                                             value = round(mean(wine$sulphates), 2),
+                                             min = 0, step = 0.05),
+                                numericInput("pred_density", "Input value for wine density",
+                                             value = round(mean(wine$density), 2),
+                                             min = 0, step = 0.05),
+                                numericInput("pred_free_sulfur", "Input value for free sulfur dioxide",
+                                             value = round(mean(wine$free_sulfur_dioxide), 2),
+                                             min = 0, step = 0.05),
+                                
                                 submitButton("Generate Prediction")
                             ),
                             mainPanel(
