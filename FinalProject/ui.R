@@ -73,8 +73,43 @@ dashboardPage(skin = "blue",
                     fluidPage(
                         h2(strong("Wine Quality App - Information")),
                         br(),
-                        p("Write stuff here!"),
-                        imageOutput("wine_picture")
+                        
+                        h4("The purpose of this app is to explore data on wine quality for both red and white wines. The data set is 
+                        from the", strong("UCI Machine Learning Repository"), "and can be found at the bottom of the page."),
+                        
+                        h4("The data is in two different data sets, one for red wine and one for white wine. For this app, the two
+                           data sets have been compiled into one with additional variables added. The complete data set has 14
+                           variables and 1,497 observations. The variables and their descriptions are below."),
+                        br(),
+                        
+                        h4(helpText(a("UCI Machine Learning Repository - Wine Quality Data", 
+                                      href="https://archive.ics.uci.edu/ml/datasets/wine+quality",
+                                      target="_blank"))),
+                        br(),
+                        
+                        fluidRow(
+                           column(6,
+                                   
+                           h4(strong("type"), "- type of wine, either red or white (categorical)", br(),
+                           strong("quality"), "- quality of the wine, ranging from 3 to 9 (categorical)", br(),
+                           strong("quality_level"), "- quality level of the wine, raning from low to very high (categorical)", br(),
+                           strong("fixed_acidity"), "- fixed acidity of the wine (numerical)", br(),
+                           strong("volatile_acidity"), "- volatile acidity of the wine (numerical)", br(),
+                           strong("citric_acid"), "- amount of citric acid in the wine (numerical)", br(),
+                           strong("residual_sugar"), "- amount of residual sugar in the wine", br(),
+                           strong("chlorides"), "- amount of chlorides in the wine", br(),
+                           strong("free_sulfur_dioxide"), "- amount of free sulfur dioxide in the wine", br(),
+                           strong("total_sulfur_dioxide"), "- total sulfur dioxide of the wine", br(),
+                           strong("density"), "- density of the wine", br(),
+                           strong("pH"), "- pH of the wine", br(),
+                           strong("sulphates"), "- amount of sulphates in the wine", br(),
+                           strong("alcohol"), "-alcohol content of the wine")
+                           ),
+                           
+                           column(6,
+                             imageOutput("wine_picture")
+                           )
+                        )
                     )
             ),
             
