@@ -13,4 +13,18 @@ The required packages for this app are:
 
 * `shiny`
 * `shinydashboard`
-* 
+* `tidyverse`
+* `ggplot2`
+* `readr`
+* `caret`
+* `mathjaxr`
+
+The following code can be used to install the above packages:
+
+`install.packages("shiny", "shinydashboard", "tidyverse", "ggplot2", "readr", "caret", "mathjaxr")
+
+## Required Code
+
+The following code is required to run the app:
+
+`shiny::runGitHub("ST-558-Final-Project", "rlhardy2", subdir = "/FinalProject/")`
