@@ -179,7 +179,7 @@ shinyServer(function(input, output, session) {
       predictors <- input$predictors
       subset <- wine[ , predictors]
       subset$quality <- wine$quality
-      subset$quality_level <- wine$quality_level
+      subset$qulity_level <- wine$quality_level
       
       train_index <- createDataPartition(subset$quality, p = (input$proportion), list = FALSE)
       

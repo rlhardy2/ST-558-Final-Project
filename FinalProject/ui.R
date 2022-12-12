@@ -120,7 +120,7 @@ dashboardPage(skin = "blue",
             #First sub tab content - Numerical Summaries
             tabItem(tabName = "summaries",
                     fluidPage(
-                        h3(strong("Wine Quality App - Numerical Summaries")),
+                        h2(strong("Wine Quality App - Numerical Summaries")),
                         br(),
                         sidebarLayout(
                             sidebarPanel(
@@ -153,7 +153,7 @@ dashboardPage(skin = "blue",
             #Second sub tab content - Contingency Tables
             tabItem(tabName = "tables",
                     fluidPage(
-                        h3(strong("Wine Quality App - Contingency Tables")),
+                        h2(strong("Wine Quality App - Contingency Tables")),
                         br(),
                         sidebarLayout(
                             sidebarPanel(
@@ -174,7 +174,7 @@ dashboardPage(skin = "blue",
             #Third sub tab content - Graphical Summaries
             tabItem(tabName = "graphs",
                     fluidPage(
-                        h3(strong("Wine Quality App - Graphical Summaries")),
+                        h2(strong("Wine Quality App - Graphical Summaries")),
                         br(),
                         sidebarLayout(
                             sidebarPanel(
@@ -224,7 +224,7 @@ dashboardPage(skin = "blue",
             #First sub tab content - Modeling Information
             tabItem(tabName = "info",
                     fluidPage(
-                        h3(strong("Wine Quality App - Modeling Information")),
+                        h2(strong("Wine Quality App - Modeling Information")),
                         br(),
                         p("Write about the different models here.")
                     )
@@ -234,7 +234,7 @@ dashboardPage(skin = "blue",
             #Second sub tab content - Model Fitting
             tabItem(tabName = "fitting",
                     fluidPage(
-                        h3(strong("Wine Quality App - Model Fitting")),
+                        h2(strong("Wine Quality App - Model Fitting")),
                         br(),
                         sidebarLayout(
                             sidebarPanel(
@@ -254,8 +254,13 @@ dashboardPage(skin = "blue",
                                 submitButton("Generate Model")
                             ),
                             mainPanel(
+                                h3(strong("Results for Modeling on the Training Data Set")),
+                                h5("Note: this page takes a few minutes to load becuase of the Random Forest model, be patient!"),
+                                h4("Multiple Linear Regression:"),
                                 verbatimTextOutput("MLR_train"),
+                                h4("Regression Tree:"),
                                 verbatimTextOutput("RT_train"),
+                                h4("Random Forest:"),
                                 verbatimTextOutput("RF_train")
                             )
                         )
@@ -266,8 +271,17 @@ dashboardPage(skin = "blue",
             #Third sub tab content - Prediction
             tabItem(tabName = "prediction",
                     fluidPage(
-                        h3(strong("Wine Quality App - Prediction")),
-                        br()
+                        h2(strong("Wine Quality App - Prediction")),
+                        br(),
+                        sidebarLayout(
+                            sidebarPanel(
+                                
+                            ),
+                            mainPanel(
+                                h3(strong("Results for Modeling and Prediction on the Test Data Set")),
+                                h5("Note; this page takes a few minutes to load because of the Random Forest model, be patient!")
+                            )
+                        )
                     )
             )
         )
