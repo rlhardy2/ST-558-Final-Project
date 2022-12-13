@@ -504,6 +504,7 @@ dashboardPage(skin = "blue",
                                 h3(strong("Results for Prediction Simulation")),
                                 h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, 
                                    be patient!"),
+                                h5("Note: if the predictor values are changed only slightly the prediction value may not change."),
                                 verbatimTextOutput("new_data"),
                                 verbatimTextOutput("model_predict")
                             )
