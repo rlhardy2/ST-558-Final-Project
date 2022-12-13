@@ -52,9 +52,15 @@ wine <- wine %>% filter(alcohol < 1000) %>% na.omit()
 
 ##########################################################################################################
 
+#-------------------------------------Server Material--------------------------------------- 
+
 #Define server
 shinyServer(function(input, output, session) {
+  
+  
+#----------------------------Image and MathJax Rendering Code------------------------------- 
     
+  
     #Code for rendering the image
     output$wine_picture <- renderImage({
       list(src = "winepicture.jpg",
@@ -67,6 +73,9 @@ shinyServer(function(input, output, session) {
     output$math_jax <- renderUI({
       withMathJax(helpText('$$Y = a + b_1X_1 + b_2X_2 + ... + b_nX_n$$'))
     })
+    
+    
+#-------------------------------------Data section--------------------------------------- 
     
     
     #Subset the data based on user selection of columns and rows (type and quality level)
@@ -157,6 +166,9 @@ shinyServer(function(input, output, session) {
         write.csv(data_subset(), file, row.names = FALSE)
       }
     )
+    
+    
+#-------------------------------------Data Exploration section--------------------------------------- 
     
     
     #Create numerical summaries (mean and SD) for the user selected variable with grouping option
@@ -311,6 +323,9 @@ shinyServer(function(input, output, session) {
     })
     
     
+#-------------------------------------Modeling section---------------------------------------  
+    
+    
     #Splitting the data into testing and training sets based on user-selected proportion value and predictor variables
     data_split <-reactive({
       predictors <- input$predictors
@@ -368,6 +383,13 @@ shinyServer(function(input, output, session) {
       else if(input$train == "Random Forest"){
         RF_train()
       }
+      else if(input$train == "All Models"){
+        list(
+          "Multiple Linear Regression" = MLR_train(), 
+          "Regression Tree" = RT_train(), 
+          "Random Forest" = RF_train()
+        )
+      }
     })
     
     
@@ -410,6 +432,13 @@ shinyServer(function(input, output, session) {
       else if(input$model == "Random Forest"){
         RF_test()$performance
       }
+      else if(input$model == "All Models"){
+        list(
+          "Multiple Linear Regression" = MLR_test()$performance,
+          "Regression Tree" = RT_test()$performance,
+          "Random Forest" = RF_test()$performance
+        )
+      }
     })
     
     
@@ -424,6 +453,13 @@ shinyServer(function(input, output, session) {
       }
       else if(input$model == "Random Forest"){
         as_tibble(RF_test()$prediction)
+      }
+      else if(input$model == "All Models"){
+        list(
+          "Multiple Linear Regression" = as_tibble(MLR_test()$prediction),
+          "Regression Tree" = as_tibble(RT_test()$prediction),
+          "Random Forest" = as_tibble(RF_test()$prediction)
+        )
       }
     })
     
@@ -454,7 +490,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Calculating prediction
+    #Calculating and outputting the prediction
     output$model_predict <- renderPrint({
       
       if(input$model_predict == "Multiple Linear Regression"){
@@ -465,6 +501,13 @@ shinyServer(function(input, output, session) {
       }
       else if(input$model_predict == "Random Forest"){
         predict(RF_train(), newdata = new_data())
+      }
+      else if(input$model_predict == "All Models"){
+        list(
+          "Multiple Linear Regression" = predict(MLR_train(), newdata = new_data()),
+          "Regression Tree" = predict(RT_train(), newdata = new_data()),
+          "Random Forest" = predict(RF_train(), newdata = new_data())
+        )
       }
     })
     

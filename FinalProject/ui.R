@@ -52,6 +52,8 @@ wine <- wine %>% filter(alcohol < 1000) %>% na.omit()
 
 ##########################################################################################################
 
+#-------------------------------------User Interface Material--------------------------------------- 
+
 #Creating the dashboard page with blue skin
 dashboardPage(skin = "blue",
     
@@ -77,7 +79,9 @@ dashboardPage(skin = "blue",
     dashboardBody(
         
         tabItems(
-            
+
+#-------------------------------------About section---------------------------------------
+
             #First tab content - About
             tabItem(tabName = "about",
                     fluidPage(
@@ -134,7 +138,8 @@ dashboardPage(skin = "blue",
                            physicochemical properties. In Decision Support Systems, Elsevier, 47(4):547-553, 2009.")
                     )
             ),
-            
+
+#-------------------------------------Data section---------------------------------------           
             
             #Second tab content - Data
             tabItem(tabName = "data",
@@ -166,7 +171,8 @@ dashboardPage(skin = "blue",
                         )
                     )
             ),
-                    
+
+#-------------------------------------Data Exploration section---------------------------------------
             
             #Third tab content - Data Exploration
             tabItem(tabName = "exploration",
@@ -273,7 +279,7 @@ dashboardPage(skin = "blue",
                                             selected = "quality_level"),
                                 radioButtons("bar_group", "Group by wine type?",
                                              choices = c("Yes", "No"),
-                                             selected = "No"),
+                                             selected = "Yes"),
                                 submitButton("Generate Graph")
                             ),
                             mainPanel(
@@ -283,7 +289,8 @@ dashboardPage(skin = "blue",
                         )
                     )
             ),
-            
+ 
+#-------------------------------------Modeling section---------------------------------------          
             
             #Fourth tab content - Modeling
             tabItem(tabName = "modeling",
@@ -401,15 +408,15 @@ dashboardPage(skin = "blue",
                                           selected = c("residual_sugar", "alcohol", "pH"), 
                                           multiple = TRUE),
                                 radioButtons("train", "Choose model for simulation",
-                                             choices = c("Multiple Linear Regression", "Regression Tree",
+                                             choices = c("All Models", "Multiple Linear Regression", "Regression Tree",
                                                          "Random Forest"),
-                                             selected = "Multiple Linear Regression"),
+                                             selected = "All Models"),
                                 submitButton("Generate Model")
                             ),
                             mainPanel(
                                 h3(strong("Results for Modeling on the Training Data Set")),
-                                h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, 
-                                   be patient!"),
+                                h5("Note: this page may take a few minutes to load if either of the *All Models* or *Random Forest* 
+                                    options are chosen, be patient!"),
                                 verbatimTextOutput("training_model")
                             )
                         )
@@ -426,17 +433,17 @@ dashboardPage(skin = "blue",
                             sidebarPanel(
                                 h4(strong("Choose model for performance simulation")),
                                 radioButtons("model", "Choose model for simulation",
-                                            choices = c("Multiple Linear Regression", "Regression Tree",
+                                            choices = c("All Models", "Multiple Linear Regression", "Regression Tree",
                                                         "Random Forest"),
-                                            selected = "Multiple Linear Regression"),
+                                            selected = "All Models"),
                                 submitButton("Generate Performance Statistics")
                             ),
                             mainPanel(
                                  h3(strong("Results for Modeling on the Testing Data Set")),
-                                 h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, 
-                                    be patient!"),
-                                 h5("Note: the second output object is a tibble of the prediction values for wine quality
-                                    using the test data set."),
+                                 h5("Note: this page may take a few minutes to load if either of the *All Models* or *Random Forest* 
+                                    options are chosen, be patient!"),
+                                 h5("Note: the second output object is a tibble of the prediction values for 
+                                    wine quality using the test data set."),
                                  verbatimTextOutput("performance"),
                                  verbatimTextOutput("pred_values")
                             )
@@ -454,9 +461,9 @@ dashboardPage(skin = "blue",
                             sidebarPanel(
                                 h4(strong("Choose model for prediction simulation")),
                                 radioButtons("model_predict", "Choose model for simulation",
-                                             choices = c("Multiple Linear Regression", "Regression Tree",
+                                             choices = c("All Models", "Multiple Linear Regression", "Regression Tree",
                                                          "Random Forest"),
-                                             selected = "Multiple Linear Regression"),
+                                             selected = "All Models"),
                                 br(),
                                 
                                 #User inputs for predictor variables
@@ -502,8 +509,8 @@ dashboardPage(skin = "blue",
                             ),
                             mainPanel(
                                 h3(strong("Results for Prediction Simulation")),
-                                h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, 
-                                   be patient!"),
+                                h5("Note: this page may take a few minutes to load if either of the *All Models* or *Random Forest* 
+                                    options are chosen, be patient!"),
                                 h5("Note: if the predictor values are changed only slightly the prediction value may not change."),
                                 verbatimTextOutput("new_data"),
                                 verbatimTextOutput("model_predict")
