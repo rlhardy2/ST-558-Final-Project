@@ -12,6 +12,8 @@ library(mathjaxr)
 
 ###########################################################################################################
 
+setwd("C:/Users/Rachel Hardy/OneDrive/Documents/NCSU/ST 558/Projects/Final Project/ST-558-Final-Project/FinalProject")
+
 #Reading in the data and combining the red and white data sets into a single data set called "wine"
 red <- read_csv2("winequality-red.csv") %>% mutate(type = "red") %>% select(type, everything())
 white <- read_csv2("winequality-white.csv") %>% mutate(type = "white") %>% select(type, everything())
@@ -110,19 +112,19 @@ dashboardPage(skin = "blue",
                            column(6,
                            h4("Variable descriptions:", br(), br(),
                            strong("type"), "- type of wine, either red or white (categorical)", br(),
-                           strong("quality"), "- quality of the wine, ranging from 3 to 9 (categorical)", br(),
+                           strong("quality"), "- quality of the wine, ranging from 3 to 9 (categorical/numerical)", br(),
                            strong("quality_level"), "- quality level of the wine, raning from low to very high (categorical)", br(),
                            strong("fixed_acidity"), "- fixed acidity of the wine (numerical)", br(),
                            strong("volatile_acidity"), "- volatile acidity of the wine (numerical)", br(),
                            strong("citric_acid"), "- amount of citric acid in the wine (numerical)", br(),
-                           strong("residual_sugar"), "- amount of residual sugar in the wine", br(),
-                           strong("chlorides"), "- amount of chlorides in the wine", br(),
-                           strong("free_sulfur_dioxide"), "- amount of free sulfur dioxide in the wine", br(),
-                           strong("total_sulfur_dioxide"), "- total sulfur dioxide of the wine", br(),
-                           strong("density"), "- density of the wine", br(),
-                           strong("pH"), "- pH of the wine", br(),
-                           strong("sulphates"), "- amount of sulphates in the wine", br(),
-                           strong("alcohol"), "- alcohol content of the wine")
+                           strong("residual_sugar"), "- amount of residual sugar in the wine (numerical)", br(),
+                           strong("chlorides"), "- amount of chlorides in the wine (numerical)", br(),
+                           strong("free_sulfur_dioxide"), "- amount of free sulfur dioxide in the wine (numerical)", br(),
+                           strong("total_sulfur_dioxide"), "- total sulfur dioxide of the wine (numerical)", br(),
+                           strong("density"), "- density of the wine (numerical)", br(),
+                           strong("pH"), "- pH of the wine (numerical)", br(),
+                           strong("sulphates"), "- amount of sulphates in the wine (numerical)", br(),
+                           strong("alcohol"), "- alcohol content of the wine (numerical)")
                            ),
                            column(6,
                              imageOutput("wine_picture")
@@ -319,7 +321,11 @@ dashboardPage(skin = "blue",
                         h4(strong("Multiple Linear Regression"), "- a statistical technique that is used to predict the outcome
                            of a variable based on the value of two or more variables. The variable to be predicted is called the
                            dependent variable (or response variable), while the variables used to predict the value are known as
-                           independent variables (or explanatory variables).", br(), br(),
+                           independent variables (or explanatory variables). The equation for multiple linear regression is
+                           below, where Y is the response variable, a is the y-intercept, X is the predictor variable,
+                           and b is the slope of the corresponding predictor variable.", 
+                           
+                           uiOutput("math_jax"), br(),
                            
                            "Some advantages of multiple linear regression are: (1) the ability to determine the relative influence
                            of one or more predictor variables to the target value, (2) the ability to identify outliers, and (3) it
@@ -406,7 +412,8 @@ dashboardPage(skin = "blue",
                             ),
                             mainPanel(
                                 h3(strong("Results for Modeling on the Training Data Set")),
-                                h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, be patient!"),
+                                h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, 
+                                   be patient!"),
                                 verbatimTextOutput("training_model")
                             )
                         )
@@ -430,8 +437,11 @@ dashboardPage(skin = "blue",
                             ),
                             mainPanel(
                                  h3(strong("Results for Modeling on the Testing Data Set")),
-                                 h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, be patient!"),
-                                 verbatimTextOutput("performance")
+                                 h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, 
+                                    be patient!"),
+                                 h5("Note: the second output object is a tibble of the prediction values for wine quality."),
+                                 verbatimTextOutput("performance"),
+                                 verbatimTextOutput("pred_values")
                             )
                         )
                     )
@@ -495,7 +505,8 @@ dashboardPage(skin = "blue",
                             ),
                             mainPanel(
                                 h3(strong("Results for Prediction Simulation")),
-                                h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, be patient!"),
+                                h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, 
+                                   be patient!"),
                                 verbatimTextOutput("final_predict")
                             )
                         )

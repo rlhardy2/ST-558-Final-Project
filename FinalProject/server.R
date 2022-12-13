@@ -12,6 +12,8 @@ library(mathjaxr)
 
 ###########################################################################################################
 
+setwd("C:/Users/Rachel Hardy/OneDrive/Documents/NCSU/ST 558/Projects/Final Project/ST-558-Final-Project/FinalProject")
+
 #Reading in the data and combining the red and white data sets into a single data set called "wine"
 red <- read_csv2("winequality-red.csv") %>% mutate(type = "red") %>% select(type, everything())
 white <- read_csv2("winequality-white.csv") %>% mutate(type = "white") %>% select(type, everything())
@@ -58,7 +60,13 @@ shinyServer(function(input, output, session) {
       list(src = "winepicture.jpg",
            width = 450,
            height = 300)
-      }, deleteFile = FALSE)
+      }, deleteFile = FALSE) 
+    
+    
+    #MathJax code
+    output$math_jax <- renderUI({
+      withMathJax(helpText('$$Y = a + b_1X_1 + b_2X_2 + ... + b_nX_n$$'))
+    })
     
     
     #Subset the data based on user selection of columns and rows (type and quality level)
@@ -391,7 +399,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #Print out the results from above
+    #Print out the performance results from above
     output$performance <- renderPrint({
       
       if(input$model == "Multiple Linear Regression"){
@@ -402,6 +410,21 @@ shinyServer(function(input, output, session) {
       }
       else if(input$model == "Random Forest"){
         RF_test()$performance
+      }
+    })
+    
+    
+    #Print out the prediction values from above
+    output$pred_values <- renderPrint({
+      
+      if(input$model == "Multiple Linear Regression"){
+        as_tibble(MLR_test()$prediction)
+      }
+      else if(input$model == "Regression Tree"){
+        as_tibble(RT_test()$prediction)
+      }
+      else if(input$model == "Random Forest"){
+        as_tibble(RF_test()$prediction)
       }
     })
     
@@ -421,7 +444,6 @@ shinyServer(function(input, output, session) {
         density = input$pred_density,
         free_sulfur_dioxide = input$pred_free_sulfur,
         total_sulfur_dioxide = input$pred_total_sulfur)
-      
       data
     })
     
@@ -431,8 +453,7 @@ shinyServer(function(input, output, session) {
       model <- input$model_predict
       
       if(model == "Multiple Linear Regression"){
-        pred <- predict(MLR_train(), newdata = new_data()$data)
-        pred
+        
       }
       else if(model == "Regression Tree"){
         pred <- predict(RT_train(), newdata = new_data()$data)
