@@ -21,9 +21,10 @@ The required packages for this app are:
 * `caret`
 * `mathjaxr`
 
-The following code can be used to install the above packages:
+The following code can be used to install and load the above packages:
 
 `install.packages("shiny", "shinydashboard", "tidyverse", "ggplot2", "readr", "caret", "mathjaxr")`
+`library(shiny, shinydashboard, tidyverse, ggplot2, readr, caret, mathjaxr)`
 
 ## Required Code
 
