@@ -394,14 +394,10 @@ dashboardPage(skin = "blue",
                                              value = 0.7, min = 0.5, max = 0.9, step = 0.05),
                                 numericInput("cv", "Select number of folds to use for cross-validation",
                                              value = 5, min = 2, max = 10, step = 1),
-                                selectInput("predictors", "Select predictor variables", choices = c("fixed_acidity", 
+                                selectInput("predictors", "Select predictor variables", choices = c("type", "fixed_acidity", 
                                         "volatile_acidity", "citric_acid", 
                                         "residual_sugar", "chlorides","pH", "sulphates", "density", "alcohol", 
-                                         "free_sulfur_dioxide", "type"), #See note below
-                                        
-                                #Note: 'total_sulfur_dioxide' was left out because it has some missing values
-                                #I would try to fix it, but it's honestly too late for me to try to deal with that!
-                                
+                                         "free_sulfur_dioxide", "total_sulfur_dioxide"),
                                           selected = c("residual_sugar", "alcohol", "pH"), 
                                           multiple = TRUE),
                                 radioButtons("train", "Choose model for simulation",
@@ -439,7 +435,8 @@ dashboardPage(skin = "blue",
                                  h3(strong("Results for Modeling on the Testing Data Set")),
                                  h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, 
                                     be patient!"),
-                                 h5("Note: the second output object is a tibble of the prediction values for wine quality."),
+                                 h5("Note: the second output object is a tibble of the prediction values for wine quality
+                                    using the test data set."),
                                  verbatimTextOutput("performance"),
                                  verbatimTextOutput("pred_values")
                             )
@@ -507,7 +504,8 @@ dashboardPage(skin = "blue",
                                 h3(strong("Results for Prediction Simulation")),
                                 h5("Note: this page may take a few minutes to load if the Random Forest model is chosen, 
                                    be patient!"),
-                                verbatimTextOutput("final_predict")
+                                verbatimTextOutput("new_data"),
+                                verbatimTextOutput("model_predict")
                             )
                         )
                     )

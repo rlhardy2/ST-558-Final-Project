@@ -316,7 +316,6 @@ shinyServer(function(input, output, session) {
       predictors <- input$predictors
       subset <- wine[ , predictors]
       subset$quality <- wine$quality
-      subset$qulity_level <- wine$quality_level
       
       train_index <- createDataPartition(subset$quality, p = (input$proportion), list = FALSE)
       
@@ -444,31 +443,29 @@ shinyServer(function(input, output, session) {
         density = input$pred_density,
         free_sulfur_dioxide = input$pred_free_sulfur,
         total_sulfur_dioxide = input$pred_total_sulfur)
+      
       data
     })
     
     
-    #Calculating prediction
-    model_predict <- reactive ({
-      model <- input$model_predict
-      
-      if(model == "Multiple Linear Regression"){
-        
-      }
-      else if(model == "Regression Tree"){
-        pred <- predict(RT_train(), newdata = new_data()$data)
-        pred
-      }
-      else if(model == "Random Forest"){
-        pred <- predict(RF_train(), newdata = new_data()$data)
-        pred
-      }
+    #Printing user created data frame
+    output$new_data <- renderPrint({
+      new_data()
     })
     
     
-    #Printing the prediction result
-    final_predict <- renderPrint({
-      model_predict()
+    #Calculating prediction
+    output$model_predict <- renderPrint({
+      
+      if(input$model_predict == "Multiple Linear Regression"){
+        predict(MLR_train(), newdata = new_data())
+      }
+      else if(input$model_predict == "Regression Tree"){
+        predict(RT_train(), newdata = new_data())
+      }
+      else if(input$model_predict == "Random Forest"){
+        predict(RF_train(), newdata = new_data())
+      }
     })
     
 })
